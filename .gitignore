@@ -1,0 +1,23 @@
+# ── Private source material — NOT part of the public website ──
+# These stay local. The website lives in index.html, css/, js/, img/.
+
+# CV sources and exports
+*.tex
+*.pdf
+cv_lattes_diego.pdf
+
+# Original photo folder (the site uses the copy in img/)
+fotos/
+
+# Student / internal PDFs
+pdfs_guri/
+
+# Misc working files
+projetos_RNP.txt
+Screenshot*.png
+*.aux
+*.log
+*.out
+
+# OS noise
+.DS_Store
