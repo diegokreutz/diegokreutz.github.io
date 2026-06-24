@@ -1,6 +1,6 @@
 # diegokreutz.github.io
 
-Personal/professional website of **Diego Kreutz** — Associate Professor at the
+Personal/professional website of **Diego Kreutz**, Associate Professor at the
 Federal University of Pampa (UNIPAMPA), Brazil.
 
 Live at: https://diegokreutz.github.io
@@ -13,7 +13,7 @@ JavaScript). No build step, no frameworks. GitHub Pages serves the files as-is.
 ```
 index.html         the whole page
 css/style.css      styling (clean academic, light theme)
-js/main.js         EN/PT language toggle
+js/main.js         EN/PT/ES language toggle
 img/diego.png      photo
 .nojekyll          tells GitHub Pages to serve files without Jekyll processing
 ```
@@ -22,20 +22,23 @@ img/diego.png      photo
 
 Everything lives in `index.html`, grouped into sections:
 
-- **Projects** — `<section id="projects">`, one `<article class="card">` each.
-- **Publications** — `<section id="publications">`, one `<li class="pub">` each.
-- **Awards** — `<section id="awards">`, one `<li class="award">` each.
+- **Projects**: `<section id="projects">`, one `<article class="card">` each.
+- **Publications**: `<section id="publications">`, one `<li class="pub">` each.
+- **Awards**: `<section id="awards">`, one `<li class="award">` each.
+- **Artifacts**: `<section id="artifacts">`, the artifact-evaluation initiative.
 
-### Bilingual text
+### Trilingual text
 
-Translatable elements carry two attributes — `data-en` and `data-pt`. The toggle
-in the top-right swaps between them and remembers the choice. When you add or edit
-text that should appear in both languages, set **both** attributes, e.g.:
+Translatable elements carry three attributes: `data-en`, `data-pt` and `data-es`.
+The toggle in the top-right swaps between them and remembers the choice. When you
+add or edit text that should appear in all three languages, set **all three**
+attributes, e.g.:
 
 ```html
 <p class="card__desc"
    data-en="Security and advanced management of IoT devices."
-   data-pt="Segurança e gestão avançada de dispositivos IoT.">
+   data-pt="Segurança e gestão avançada de dispositivos IoT."
+   data-es="Seguridad y gestión avanzada de dispositivos IoT.">
   Security and advanced management of IoT devices.
 </p>
 ```

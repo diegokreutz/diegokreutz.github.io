@@ -1,13 +1,14 @@
 /* ===================================================================
-   Language toggle (EN / PT)
-   Every translatable element carries data-en and data-pt attributes.
-   We swap its content and remember the choice in localStorage.
+   Language toggle (EN / PT / ES)
+   Every translatable element carries data-en, data-pt and data-es
+   attributes. We swap its content and remember the choice in
+   localStorage.
    =================================================================== */
 (function () {
   "use strict";
 
   var STORAGE_KEY = "dk-lang";
-  var SUPPORTED = ["en", "pt"];
+  var SUPPORTED = ["en", "pt", "es"];
 
   function applyLanguage(lang) {
     if (SUPPORTED.indexOf(lang) === -1) { lang = "en"; }
