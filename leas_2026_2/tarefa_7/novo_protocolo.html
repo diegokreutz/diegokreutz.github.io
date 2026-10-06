@@ -1,0 +1,1057 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Novo protocolo experimental</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff; --fg: #1d1f23; --muted: #5d636e; --line: #e3e5e9;
+  --accent: #1f5fbf; --accent-soft: #eef3fb; --code-bg: #f6f7f9;
+  --warn: #a5410f; --row: #fafbfc;
+  --surface: #fcfcfb; --grid: #e1e0d9; --axis: #c3c2b7;
+  --ok: #0ca30c; --bad: #d03b3b; --ind: #898781;
+  --s1: #2a78d6; --s2: #eb6834; --s7: #4a3aa7;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15171b; --fg: #e6e8eb; --muted: #9aa1ab; --line: #2c3037;
+    --accent: #7fb0ff; --accent-soft: #1c2533; --code-bg: #1d2026;
+    --warn: #f0a070; --row: #191c21;
+    --surface: #1a1a19; --grid: #2c2c2a; --axis: #4a4a46;
+    --ok: #0ca30c; --bad: #e66767; --ind: #898781;
+    --s1: #3987e5; --s2: #d95926; --s7: #9085e9;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15171b; --fg: #e6e8eb; --muted: #9aa1ab; --line: #2c3037;
+  --accent: #7fb0ff; --accent-soft: #1c2533; --code-bg: #1d2026;
+  --warn: #f0a070; --row: #191c21;
+  --surface: #1a1a19; --grid: #2c2c2a; --axis: #4a4a46;
+  --ok: #0ca30c; --bad: #e66767; --ind: #898781;
+  --s1: #3987e5; --s2: #d95926; --s7: #9085e9;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.65 "Source Serif 4", Georgia, serif; }
+.wrap { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 48px; max-width: 1240px; margin: 0 auto; padding: 40px 32px 96px; }
+nav.toc { position: sticky; top: 24px; align-self: start; max-height: calc(100vh - 48px); overflow: auto; font: 14px/1.45 Inter, system-ui, sans-serif; border-right: 1px solid var(--line); padding-right: 20px; }
+nav.toc .kicker { text-transform: uppercase; letter-spacing: .08em; font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+nav.toc a { display: block; color: var(--muted); text-decoration: none; padding: 5px 0; }
+nav.toc a:hover { color: var(--accent); }
+nav.toc .other { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--line); }
+nav.toc .other a { color: var(--accent); font-weight: 500; }
+main { min-width: 0; max-width: 860px; }
+h1 { font-size: 2.1rem; line-height: 1.2; margin: 0 0 18px; font-weight: 700; }
+h2 { font-size: 1.5rem; margin: 56px 0 14px; padding-top: 12px; border-top: 1px solid var(--line); font-weight: 700; }
+h3 { font-size: 1.15rem; margin: 32px 0 8px; font-weight: 600; }
+a { color: var(--accent); }
+p, li { max-width: 76ch; }
+hr { display: none; }
+strong { font-weight: 650; }
+code { font: .86em "JetBrains Mono", ui-monospace, monospace; background: var(--code-bg); padding: .1em .35em; border-radius: 4px; }
+pre { background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; overflow-x: auto; font-size: 14px; line-height: 1.55; }
+pre code { background: none; padding: 0; white-space: pre-wrap; word-break: break-word; }
+pre.mermaid { background: transparent; border: 1px solid var(--line); text-align: center; white-space: pre; }
+.table-wrap { overflow-x: auto; margin: 18px 0 24px; border: 1px solid var(--line); border-radius: 8px; }
+table { border-collapse: collapse; width: 100%; font: 14.5px/1.5 Inter, system-ui, sans-serif; }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+th { font-weight: 600; background: var(--accent-soft); }
+tbody tr:nth-child(even) { background: var(--row); }
+tbody tr:last-child td { border-bottom: none; }
+.lead { font: 15px/1.6 Inter, system-ui, sans-serif; color: var(--muted); margin-bottom: 8px; }
+.theme { position: fixed; top: 14px; right: 16px; font: 13px Inter, sans-serif; background: var(--bg); color: var(--muted); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+
+.fig { margin: 28px 0 32px; }
+.fig-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; padding: 14px 12px; background: var(--surface); }
+.fig svg { display: block; width: 100%; height: auto; }
+.fig figcaption { font: 14px/1.55 Inter, system-ui, sans-serif; color: var(--muted); margin-top: 10px; max-width: 80ch; }
+.fig figcaption strong { color: var(--fg); }
+.fig text { fill: var(--fg); }
+.fig text.muted { fill: var(--muted); }
+.fig text.warn { fill: var(--warn); }
+.fig .rule { stroke: var(--line); stroke-width: 1; }
+.fig .grid { stroke: var(--grid); stroke-width: 1; }
+.fig .axis { stroke: var(--axis); stroke-width: 1.5; }
+.fig .band { fill: none; stroke: var(--warn); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.fig .d-ok { fill: color-mix(in srgb, var(--ok) 18%, var(--surface)); stroke: var(--ok); stroke-width: 1.5; }
+.fig .d-ind { fill: color-mix(in srgb, var(--ind) 14%, var(--surface)); stroke: var(--ind); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.fig .d-bad { fill: color-mix(in srgb, var(--bad) 16%, var(--surface)); stroke: var(--bad); stroke-width: 1.5; }
+.fig .dot-match { fill: var(--ok); stroke: var(--surface); stroke-width: 2; }
+.fig .st-ok { fill: color-mix(in srgb, var(--s1) 26%, var(--surface)); stroke: var(--s1); stroke-width: 1.5; }
+.fig .st-empty { fill: var(--surface); stroke: var(--s1); stroke-width: 1.5; }
+.fig .st-sim { stroke: var(--s2); stroke-width: 1.5; stroke-dasharray: 5 3; }
+.fig .hatch-line { stroke: color-mix(in srgb, var(--s2) 40%, transparent); stroke-width: 2; }
+.fig .bar-s1 { fill: var(--s1); }
+.fig .bar-s1-light { fill: color-mix(in srgb, var(--s1) 35%, var(--surface)); }
+.fig .bar-ref { stroke: var(--ind); stroke-width: 1.5; }
+.fig .flow-exec { stroke: var(--s1); opacity: .85; }
+.fig .flow-p3 { stroke: var(--s2); opacity: .85; }
+.fig .flow-same { stroke: var(--ind); opacity: .45; }
+.fig .nb { fill: var(--surface); stroke: var(--axis); stroke-width: 1.2; }
+.fig .nb-llm { fill: color-mix(in srgb, var(--s1) 14%, var(--surface)); stroke: var(--s1); stroke-width: 1.2; }
+.fig .nb-ok { fill: color-mix(in srgb, var(--ok) 16%, var(--surface)); stroke: var(--ok); stroke-width: 1.2; }
+.fig .nb-sim { fill: color-mix(in srgb, var(--s2) 12%, var(--surface)); stroke: var(--s2); stroke-width: 1.2; stroke-dasharray: 5 3; }
+.fig .nb-key { fill: color-mix(in srgb, var(--s7) 14%, var(--surface)); stroke: var(--s7); stroke-width: 1.4; }
+.fig .nb-warn { fill: color-mix(in srgb, var(--bad) 10%, var(--surface)); stroke: var(--bad); stroke-width: 1.2; }
+.fig .c-conf { fill: color-mix(in srgb, var(--ind) 12%, var(--surface)); stroke: var(--ind); }
+.fig .c-contra { fill: color-mix(in srgb, var(--bad) 16%, var(--surface)); stroke: var(--bad); }
+.fig .c-res { fill: color-mix(in srgb, var(--ok) 16%, var(--surface)); stroke: var(--ok); }
+.fig .c-intro { fill: color-mix(in srgb, var(--s2) 16%, var(--surface)); stroke: var(--s2); }
+.fig .arr { stroke: var(--muted); stroke-width: 1.4; }
+.fig .arr-dash { stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 4 3; }
+.fig .ah { fill: var(--muted); }
+.fig g:hover > rect, .fig g:hover > path { filter: brightness(0.96); }
+
+.params td:first-child { white-space: nowrap; }
+.chip { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; border: 1px solid; }
+.chip.fator { color: var(--s1); border-color: var(--s1); background: color-mix(in srgb, var(--s1) 10%, var(--bg)); }
+.chip.ctrl { color: var(--fg); border-color: var(--axis); background: var(--code-bg); }
+.chip.exec { color: var(--ok); border-color: var(--ok); background: color-mix(in srgb, var(--ok) 10%, var(--bg)); }
+.chip.medida { color: var(--s7); border-color: var(--s7); background: color-mix(in srgb, var(--s7) 10%, var(--bg)); }
+.chip.limiar { color: var(--warn); border-color: var(--warn); background: color-mix(in srgb, var(--warn) 10%, var(--bg)); }
+.params td:nth-child(4) { min-width: 110px; border-left: 1px dashed var(--line); }
+@media (max-width: 900px) {
+  .wrap { grid-template-columns: 1fr; padding: 24px 16px 64px; gap: 8px; }
+  nav.toc { position: static; max-height: none; border-right: none; border-bottom: 1px solid var(--line); padding: 0 0 16px; }
+  h1 { font-size: 1.6rem; }
+  body { font-size: 16px; }
+}
+@media print { nav.toc, .theme { display: none; } .wrap { display: block; } }
+</style>
+</head>
+<body>
+<button class="theme" id="theme" type="button">Tema</button>
+<div class="wrap">
+<nav class="toc">
+<div class="kicker">Sumário</div>
+<a href="#1-objetivo-perguntas-e-hipóteses">1. Objetivo, perguntas e hipóteses</a>
+<a href="#2-princípio-central-do-desenho-separar-quem-executa-de-quem-julga">2. Princípio central do desenho: separar quem executa de quem julga</a>
+<a href="#3-desenho-experimental">3. Desenho experimental</a>
+<a href="#4-fase-0-preparação-antes-de-qualquer-llm">4. Fase 0: preparação (antes de qualquer LLM)</a>
+<a href="#5-etapa-a-avaliação-analítica">5. Etapa A: avaliação analítica</a>
+<a href="#6-etapa-b-avaliação-por-execução">6. Etapa B: avaliação por execução</a>
+<a href="#7-verificação-das-evidências-citadas-item-9-da-tarefa">7. Verificação das evidências citadas (item 9 da tarefa)</a>
+<a href="#8-métricas-e-análise">8. Métricas e análise</a>
+<a href="#9-tabelas-a-entregar">9. Tabelas a entregar</a>
+<a href="#10-fluxograma-item-13">10. Fluxograma (item 13)</a>
+<a href="#11-estrutura-de-registros">11. Estrutura de registros</a>
+<a href="#12-aplicação-aos-dois-artefatos-já-estudados">12. Aplicação aos dois artefatos já estudados</a>
+<a href="#13-ameaças-à-validade-que-permanecem">13. Ameaças à validade que permanecem</a>
+<a href="#14-esforço-estimado">14. Esforço estimado</a>
+<a href="#15-correspondência-com-os-itens-da-tarefa">15. Correspondência com os itens da tarefa</a>
+<div class="other"><a href="avaliacao_critica.html">Avaliação crítica &rarr;</a></div>
+</nav>
+<main>
+<h1>Novo protocolo experimental: LLMs reproduzem a avaliação oficial de artefatos (selos F e R)?</h1>
+<p>Este protocolo substitui o usado na T7, corrigindo os problemas apontados em <a href="avaliacao_critica.html"><code>avaliacao_critica.md</code></a>. Ele foi desenhado para caber no escopo da tarefa (um artefato, três LLMs de três provedores, avaliação analítica e avaliação por execução com cada LLM) e ser executável por um aluno ou uma dupla. Extensões opcionais, para quem quiser resultados mais generalizáveis, estão marcadas como <strong>[Opcional]</strong>.</p>
+<hr />
+<h2 id="1-objetivo-perguntas-e-hipóteses">1. Objetivo, perguntas e hipóteses</h2>
+<p><strong>Objetivo (da tarefa):</strong> investigar se LLMs de provedores diferentes, seguindo as instruções oficiais da edição, reproduzem os selos F e R atribuídos ao artefato, e se a análise documental é consistente com a execução prática.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Pergunta</th>
+<th>Formulação operacional</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q1</td>
+<td>A decisão analítica (sem execução) de cada LLM coincide com o selo oficial?</td>
+</tr>
+<tr>
+<td>Q2</td>
+<td>Ao receber evidências reais de execução, a LLM confirma, revisa ou contradiz a decisão analítica? A decisão final se aproxima do oficial?</td>
+</tr>
+<tr>
+<td>Q3</td>
+<td>As três LLMs concordam entre si quando recebem exatamente as mesmas entradas?</td>
+</tr>
+<tr>
+<td>Q4</td>
+<td>As evidências citadas pelas LLMs existem e sustentam o que elas afirmam?</td>
+</tr>
+</tbody>
+</table></div>
+<p>Hipóteses registradas <strong>antes</strong> da coleta (escreva as suas no arquivo <code>preregistro.md</code> e não as altere depois):</p>
+<ul>
+<li>H1: na etapa analítica, as LLMs tendem a "Indeterminado" para F, porque as instruções oficiais exigem prova de execução.</li>
+<li>H2: com o mesmo registro de execução bem-sucedida, as três LLMs convergem para a mesma decisão de F.</li>
+<li>H3: as divergências em R se explicam principalmente pela interpretação de "principais reivindicações", e diminuem quando a lista de reivindicações é fixada previamente.</li>
+</ul>
+<hr />
+<h2 id="2-princípio-central-do-desenho-separar-quem-executa-de-quem-julga">2. Princípio central do desenho: separar quem executa de quem julga</h2>
+<p>No protocolo anterior, a única LLM que "executou" também foi a única que atribuiu F, de modo que não se sabia se o efeito era do modelo ou da execução. Neste protocolo:</p>
+<ol>
+<li><strong>Todas as LLMs recebem as mesmas entradas em todas as etapas.</strong> Na etapa analítica, o mesmo pacote de arquivos. Na etapa por execução, o <strong>mesmo registro de execução</strong>.</li>
+<li><strong>A execução é feita uma vez, pelo aluno, em ambiente que atende aos requisitos dos autores</strong>, seguindo os procedimentos dos autores e cobrindo a <strong>união dos passos</strong> propostos pelos planos das três LLMs. Assim, cada LLM tem seu plano executado (item 5 da tarefa), e nenhuma recebe mais evidência que a outra.</li>
+<li><strong>Simulação não substitui execução.</strong> Se a execução for impossível mesmo no ambiente dos autores, isso é registrado como resultado ("execução bloqueada, motivo X"), e as LLMs recebem esse registro factual como qualquer outro.</li>
+</ol>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 820 460" role="img" aria-label="Comparação entre o desenho anterior e o novo" font-family="Inter, system-ui, sans-serif" style="min-width:640px"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker></defs><text x="20" y="28" font-size="14" text-anchor="start" font-weight="700" class="ink">Protocolo T7: entradas e execução diferentes por LLM</text><rect x="20" y="46" width="190" height="46" rx="7" class="nb"/><text x="115.0" y="66.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">artigo + repo</text><text x="115.0" y="83.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">agente Codex, executa</text><line x1="212" y1="69" x2="258" y2="69" class="arr" marker-end="url(#ah)"/><rect x="260" y="46" width="130" height="46" rx="7" class="nb-llm"/><text x="325.0" y="73.5" font-size="13" text-anchor="middle" font-weight="600" class="ink">OpenAI</text><line x1="392" y1="69" x2="438" y2="69" class="arr" marker-end="url(#ah)"/><rect x="440" y="46" width="150" height="46" rx="7" class="nb-ok"/><text x="515.0" y="73.5" font-size="13" text-anchor="middle" font-weight="600" class="ink">Execução real</text><line x1="592" y1="69" x2="638" y2="69" class="arr" marker-end="url(#ah)"/><rect x="640" y="46" width="160" height="46" rx="7" class="nb"/><text x="720.0" y="66.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Decisão F/R</text><text x="720.0" y="83.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">não comparável</text><rect x="20" y="104" width="190" height="46" rx="7" class="nb"/><text x="115.0" y="124.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">repo (sem artigo no Mininet)</text><text x="115.0" y="141.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">chat desktop</text><line x1="212" y1="127" x2="258" y2="127" class="arr" marker-end="url(#ah)"/><rect x="260" y="104" width="130" height="46" rx="7" class="nb-llm"/><text x="325.0" y="131.5" font-size="13" text-anchor="middle" font-weight="600" class="ink">Anthropic</text><line x1="392" y1="127" x2="438" y2="127" class="arr" marker-end="url(#ah)"/><rect x="440" y="104" width="150" height="46" rx="7" class="nb-sim"/><text x="515.0" y="131.5" font-size="13" text-anchor="middle" font-weight="600" class="ink">Simulação</text><line x1="592" y1="127" x2="638" y2="127" class="arr" marker-end="url(#ah)"/><rect x="640" y="104" width="160" height="46" rx="7" class="nb"/><text x="720.0" y="124.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Decisão F/R</text><text x="720.0" y="141.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">não comparável</text><rect x="20" y="162" width="190" height="46" rx="7" class="nb"/><text x="115.0" y="182.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">artigo + repo</text><text x="115.0" y="199.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">IDE Antigravity</text><line x1="212" y1="185" x2="258" y2="185" class="arr" marker-end="url(#ah)"/><rect x="260" y="162" width="130" height="46" rx="7" class="nb-llm"/><text x="325.0" y="189.5" font-size="13" text-anchor="middle" font-weight="600" class="ink">Google</text><line x1="392" y1="185" x2="438" y2="185" class="arr" marker-end="url(#ah)"/><rect x="440" y="162" width="150" height="46" rx="7" class="nb-sim"/><text x="515.0" y="189.5" font-size="13" text-anchor="middle" font-weight="600" class="ink">Simulação</text><line x1="592" y1="185" x2="638" y2="185" class="arr" marker-end="url(#ah)"/><rect x="640" y="162" width="160" height="46" rx="7" class="nb"/><text x="720.0" y="182.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Decisão F/R</text><text x="720.0" y="199.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">não comparável</text><line x1="20" x2="800" y1="232" y2="232" class="rule"/><text x="20" y="258" font-size="14" text-anchor="start" font-weight="700" class="ink">Novo protocolo: mesmas entradas, uma execução, mesmo registro</text><rect x="20" y="338" width="130" height="56" rx="7" class="nb-key"/><text x="85.0" y="363.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Pacote idêntico</text><text x="85.0" y="380.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">SHA fixo, artigo</text><line x1="152" y1="366" x2="188" y2="303" class="arr" marker-end="url(#ah)"/><rect x="190" y="280" width="130" height="46" rx="7" class="nb-llm"/><text x="255.0" y="300.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">OpenAI</text><text x="255.0" y="317.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">A + plano B1</text><line x1="322" y1="303" x2="358" y2="366" class="arr" marker-end="url(#ah)"/><line x1="152" y1="366" x2="188" y2="361" class="arr" marker-end="url(#ah)"/><rect x="190" y="338" width="130" height="46" rx="7" class="nb-llm"/><text x="255.0" y="358.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Anthropic</text><text x="255.0" y="375.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">A + plano B1</text><line x1="322" y1="361" x2="358" y2="366" class="arr" marker-end="url(#ah)"/><line x1="152" y1="366" x2="188" y2="419" class="arr" marker-end="url(#ah)"/><rect x="190" y="396" width="130" height="46" rx="7" class="nb-llm"/><text x="255.0" y="416.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Google</text><text x="255.0" y="433.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">A + plano B1</text><line x1="322" y1="419" x2="358" y2="366" class="arr" marker-end="url(#ah)"/><rect x="360" y="338" width="120" height="56" rx="7" class="nb"/><text x="420.0" y="363.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">União dos planos</text><text x="420.0" y="380.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">roteiro único</text><line x1="482" y1="366" x2="508" y2="366" class="arr" marker-end="url(#ah)"/><rect x="510" y="332" width="120" height="68" rx="7" class="nb-ok"/><text x="570.0" y="363.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Execução</text><text x="570.0" y="380.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">aluno, ambiente</text><text x="570" y="392" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">dos autores</text><line x1="632" y1="366" x2="668" y2="303" class="arr" marker-end="url(#ah)"/><rect x="670" y="280" width="130" height="46" rx="7" class="nb-llm"/><text x="735.0" y="300.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">OpenAI</text><text x="735.0" y="317.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">B2: mesmo registro</text><line x1="632" y1="366" x2="668" y2="361" class="arr" marker-end="url(#ah)"/><rect x="670" y="338" width="130" height="46" rx="7" class="nb-llm"/><text x="735.0" y="358.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Anthropic</text><text x="735.0" y="375.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">B2: mesmo registro</text><line x1="632" y1="366" x2="668" y2="419" class="arr" marker-end="url(#ah)"/><rect x="670" y="396" width="130" height="46" rx="7" class="nb-llm"/><text x="735.0" y="416.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Google</text><text x="735.0" y="433.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">B2: mesmo registro</text></svg></div><figcaption><strong>Figura 1.</strong> Princípio central do novo desenho. Em cima, o T7: cada LLM teve entradas, interface e condição de execução diferentes. Embaixo, o novo protocolo: entradas idênticas, uma execução que cobre a união dos planos e o mesmo registro factual para as três LLMs.</figcaption></figure>
+
+<p><strong>[Opcional] Condição agêntica.</strong> Em uma condição separada, cada LLM executa o artefato sozinha, por meio do seu agente de linha de comando (Codex CLI, Claude Code, Gemini CLI), <strong>dentro do mesmo contêiner ou VM, partindo da mesma imagem</strong>. Os resultados dessa condição são reportados à parte e nunca misturados com a condição principal.</p>
+<hr />
+<h2 id="3-desenho-experimental">3. Desenho experimental</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Fator</th>
+<th>Níveis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LLM</td>
+<td>3 (OpenAI, Anthropic, Google), versão e nível de raciocínio registrados</td>
+</tr>
+<tr>
+<td>Etapa</td>
+<td>A (analítica) e B (por execução, com registro comum)</td>
+</tr>
+<tr>
+<td>Selo</td>
+<td>F e R</td>
+</tr>
+<tr>
+<td>Repetição</td>
+<td>3 cadeias independentes por LLM (conversa nova a cada cadeia, memória desativada)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Cada <strong>cadeia</strong> é: Prompt A → Prompt B1 (plano) → [execução comum pelo aluno] → Prompt B2 (decisão após execução), na mesma conversa. Total: 3 LLMs × 3 cadeias × 2 etapas × 2 selos = <strong>36 decisões por artefato</strong>, contra 6 decisões finais por artefato, sem repetição, no protocolo anterior.</p>
+<p>A execução prática é feita <strong>uma vez</strong> (com a união dos planos); a repetição recai apenas sobre o julgamento, que é barato.</p>
+<p>Linha de base humana: antes de abrir qualquer resposta de LLM, o aluno (ou cada membro da dupla, separadamente) registra sua própria decisão analítica F/R. Depois da execução, registra a decisão final. Isso responde se a dificuldade é do artefato ou dos modelos.</p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 830 340" role="img" aria-label="Estrutura de repetições do novo protocolo" font-family="Inter, system-ui, sans-serif" style="min-width:640px"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker></defs><text x="220.0" y="30" font-size="13" text-anchor="middle" font-weight="600" class="muted">Cadeia 1 (conversa nova)</text><text x="460.0" y="30" font-size="13" text-anchor="middle" font-weight="600" class="muted">Cadeia 2 (conversa nova)</text><text x="700.0" y="30" font-size="13" text-anchor="middle" font-weight="600" class="muted">Cadeia 3 (conversa nova)</text><text x="10" y="77" font-size="13" text-anchor="start" font-weight="700" class="ink">OpenAI</text><rect x="110" y="58" width="64" height="30" rx="5" class="nb-llm"/><text x="142" y="78" font-size="13" text-anchor="middle" font-weight="600" class="ink">A</text><line x1="174" y1="73" x2="184" y2="73" class="arr" marker-end="url(#ah)"/><rect x="186" y="58" width="64" height="30" rx="5" class="nb-llm"/><text x="218" y="78" font-size="13" text-anchor="middle" font-weight="600" class="ink">B1</text><line x1="250" y1="73" x2="260" y2="73" class="arr" marker-end="url(#ah)"/><rect x="262" y="58" width="64" height="30" rx="5" class="nb-key"/><text x="294" y="78" font-size="13" text-anchor="middle" font-weight="600" class="ink">B2</text><rect x="350" y="58" width="64" height="30" rx="5" class="nb-llm"/><text x="382" y="78" font-size="13" text-anchor="middle" font-weight="600" class="ink">A</text><line x1="414" y1="73" x2="424" y2="73" class="arr" marker-end="url(#ah)"/><rect x="426" y="58" width="64" height="30" rx="5" class="nb-llm"/><text x="458" y="78" font-size="13" text-anchor="middle" font-weight="600" class="ink">B1</text><line x1="490" y1="73" x2="500" y2="73" class="arr" marker-end="url(#ah)"/><rect x="502" y="58" width="64" height="30" rx="5" class="nb-key"/><text x="534" y="78" font-size="13" text-anchor="middle" font-weight="600" class="ink">B2</text><rect x="590" y="58" width="64" height="30" rx="5" class="nb-llm"/><text x="622" y="78" font-size="13" text-anchor="middle" font-weight="600" class="ink">A</text><line x1="654" y1="73" x2="664" y2="73" class="arr" marker-end="url(#ah)"/><rect x="666" y="58" width="64" height="30" rx="5" class="nb-llm"/><text x="698" y="78" font-size="13" text-anchor="middle" font-weight="600" class="ink">B1</text><line x1="730" y1="73" x2="740" y2="73" class="arr" marker-end="url(#ah)"/><rect x="742" y="58" width="64" height="30" rx="5" class="nb-key"/><text x="774" y="78" font-size="13" text-anchor="middle" font-weight="600" class="ink">B2</text><text x="10" y="139" font-size="13" text-anchor="start" font-weight="700" class="ink">Anthropic</text><rect x="110" y="120" width="64" height="30" rx="5" class="nb-llm"/><text x="142" y="140" font-size="13" text-anchor="middle" font-weight="600" class="ink">A</text><line x1="174" y1="135" x2="184" y2="135" class="arr" marker-end="url(#ah)"/><rect x="186" y="120" width="64" height="30" rx="5" class="nb-llm"/><text x="218" y="140" font-size="13" text-anchor="middle" font-weight="600" class="ink">B1</text><line x1="250" y1="135" x2="260" y2="135" class="arr" marker-end="url(#ah)"/><rect x="262" y="120" width="64" height="30" rx="5" class="nb-key"/><text x="294" y="140" font-size="13" text-anchor="middle" font-weight="600" class="ink">B2</text><rect x="350" y="120" width="64" height="30" rx="5" class="nb-llm"/><text x="382" y="140" font-size="13" text-anchor="middle" font-weight="600" class="ink">A</text><line x1="414" y1="135" x2="424" y2="135" class="arr" marker-end="url(#ah)"/><rect x="426" y="120" width="64" height="30" rx="5" class="nb-llm"/><text x="458" y="140" font-size="13" text-anchor="middle" font-weight="600" class="ink">B1</text><line x1="490" y1="135" x2="500" y2="135" class="arr" marker-end="url(#ah)"/><rect x="502" y="120" width="64" height="30" rx="5" class="nb-key"/><text x="534" y="140" font-size="13" text-anchor="middle" font-weight="600" class="ink">B2</text><rect x="590" y="120" width="64" height="30" rx="5" class="nb-llm"/><text x="622" y="140" font-size="13" text-anchor="middle" font-weight="600" class="ink">A</text><line x1="654" y1="135" x2="664" y2="135" class="arr" marker-end="url(#ah)"/><rect x="666" y="120" width="64" height="30" rx="5" class="nb-llm"/><text x="698" y="140" font-size="13" text-anchor="middle" font-weight="600" class="ink">B1</text><line x1="730" y1="135" x2="740" y2="135" class="arr" marker-end="url(#ah)"/><rect x="742" y="120" width="64" height="30" rx="5" class="nb-key"/><text x="774" y="140" font-size="13" text-anchor="middle" font-weight="600" class="ink">B2</text><text x="10" y="201" font-size="13" text-anchor="start" font-weight="700" class="ink">Google</text><rect x="110" y="182" width="64" height="30" rx="5" class="nb-llm"/><text x="142" y="202" font-size="13" text-anchor="middle" font-weight="600" class="ink">A</text><line x1="174" y1="197" x2="184" y2="197" class="arr" marker-end="url(#ah)"/><rect x="186" y="182" width="64" height="30" rx="5" class="nb-llm"/><text x="218" y="202" font-size="13" text-anchor="middle" font-weight="600" class="ink">B1</text><line x1="250" y1="197" x2="260" y2="197" class="arr" marker-end="url(#ah)"/><rect x="262" y="182" width="64" height="30" rx="5" class="nb-key"/><text x="294" y="202" font-size="13" text-anchor="middle" font-weight="600" class="ink">B2</text><rect x="350" y="182" width="64" height="30" rx="5" class="nb-llm"/><text x="382" y="202" font-size="13" text-anchor="middle" font-weight="600" class="ink">A</text><line x1="414" y1="197" x2="424" y2="197" class="arr" marker-end="url(#ah)"/><rect x="426" y="182" width="64" height="30" rx="5" class="nb-llm"/><text x="458" y="202" font-size="13" text-anchor="middle" font-weight="600" class="ink">B1</text><line x1="490" y1="197" x2="500" y2="197" class="arr" marker-end="url(#ah)"/><rect x="502" y="182" width="64" height="30" rx="5" class="nb-key"/><text x="534" y="202" font-size="13" text-anchor="middle" font-weight="600" class="ink">B2</text><rect x="590" y="182" width="64" height="30" rx="5" class="nb-llm"/><text x="622" y="202" font-size="13" text-anchor="middle" font-weight="600" class="ink">A</text><line x1="654" y1="197" x2="664" y2="197" class="arr" marker-end="url(#ah)"/><rect x="666" y="182" width="64" height="30" rx="5" class="nb-llm"/><text x="698" y="202" font-size="13" text-anchor="middle" font-weight="600" class="ink">B1</text><line x1="730" y1="197" x2="740" y2="197" class="arr" marker-end="url(#ah)"/><rect x="742" y="182" width="64" height="30" rx="5" class="nb-key"/><text x="774" y="202" font-size="13" text-anchor="middle" font-weight="600" class="ink">B2</text><rect x="110" y="260" width="700" height="40" rx="7" class="nb-ok"/><text x="460.0" y="285" font-size="13" text-anchor="middle" font-weight="600" class="ink">Registro factual único da execução (o mesmo para as 9 conversas)</text><line x1="294" y1="260" x2="294" y2="216" class="arr-dash" marker-end="url(#ah)"/><line x1="534" y1="260" x2="534" y2="216" class="arr-dash" marker-end="url(#ah)"/><line x1="774" y1="260" x2="774" y2="216" class="arr-dash" marker-end="url(#ah)"/><text x="110" y="326" font-size="12" text-anchor="start" font-weight="400" class="muted">A: analítica · B1: plano de execução · B2: decisão após execução · 3 LLMs × 3 cadeias × 2 etapas × 2 selos = 36 decisões</text></svg></div><figcaption><strong>Figura 2.</strong> Estrutura de repetições. Cada LLM roda três cadeias independentes (A, B1, B2) em conversas novas; todas as nove recebem o mesmo registro factual na etapa B2.</figcaption></figure>
+
+<h3>3.1 Parâmetros e valores dos experimentos</h3>
+<p>Esta tabela é a referência única do que varia, do que fica fixo e do que se mede. Copie-a para <code>preregistro.md</code>, preencha a coluna "Valor adotado" antes da coleta e não a altere depois; qualquer mudança vira desvio registrado.</p>
+
+
+<div class="table-wrap"><table class="params">
+<thead>
+<tr>
+<th>Grupo</th>
+<th>Parâmetro</th>
+<th>Valor ou níveis recomendados</th>
+<th>Valor adotado</th>
+<th>Onde registrar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="chip fator">Fator (varia)</span></td>
+<td>LLM / provedor</td>
+<td>3 níveis: OpenAI, Anthropic, Google</td>
+<td></td>
+<td><code>llms.md</code></td>
+</tr>
+<tr>
+<td><span class="chip fator">Fator (varia)</span></td>
+<td>Etapa</td>
+<td>A (analítica), B (após execução)</td>
+<td></td>
+<td><code>decisoes.csv</code></td>
+</tr>
+<tr>
+<td><span class="chip fator">Fator (varia)</span></td>
+<td>Selo</td>
+<td>F, R</td>
+<td></td>
+<td><code>decisoes.csv</code></td>
+</tr>
+<tr>
+<td><span class="chip fator">Fator (varia)</span></td>
+<td>Cadeia (repetição)</td>
+<td>1, 2, 3 (conversa nova a cada uma)</td>
+<td></td>
+<td><code>decisoes.csv</code></td>
+</tr>
+<tr>
+<td><span class="chip fator">Fator (opcional)</span></td>
+<td>Condição agêntica</td>
+<td>sim / não; se sim, mesma imagem de contêiner ou VM para as três</td>
+<td></td>
+<td><code>llms.md</code></td>
+</tr>
+<tr>
+<td><span class="chip ctrl">Controlado (fixo)</span></td>
+<td>Artefato e edição</td>
+<td>um artefato do SBSeg ou SBRC; edição e título</td>
+<td></td>
+<td><code>versao.md</code></td>
+</tr>
+<tr>
+<td><span class="chip ctrl">Controlado (fixo)</span></td>
+<td>Versão do artefato</td>
+<td>SHA do commit avaliado pelo comitê (tag, Zenodo ou data)</td>
+<td></td>
+<td><code>versao.md</code></td>
+</tr>
+<tr>
+<td><span class="chip ctrl">Controlado (fixo)</span></td>
+<td>Pacote de entrada</td>
+<td>artigo.pdf, artefato.zip, instrucoes-oficiais.md, reivindicacoes.md; hash em <code>MANIFESTO.sha256</code></td>
+<td></td>
+<td><code>pacote/</code></td>
+</tr>
+<tr>
+<td><span class="chip ctrl">Controlado (fixo)</span></td>
+<td>Lista de reivindicações</td>
+<td>C1 a Cn, com localização no artigo e resultado esperado</td>
+<td></td>
+<td><code>reivindicacoes.md</code></td>
+</tr>
+<tr>
+<td><span class="chip ctrl">Controlado (fixo)</span></td>
+<td>Regra para R</td>
+<td>reivindicações indicadas pelos autores no README ou, na falta, C1 a Cn</td>
+<td></td>
+<td><code>reivindicacoes.md</code></td>
+</tr>
+<tr>
+<td><span class="chip ctrl">Controlado (fixo)</span></td>
+<td>Modelo e versão</td>
+<td>nome e versão exibidos pela interface; data e hora de cada cadeia</td>
+<td></td>
+<td><code>llms.md</code></td>
+</tr>
+<tr>
+<td><span class="chip ctrl">Controlado (fixo)</span></td>
+<td>Nível de raciocínio</td>
+<td>o mesmo nível nominal para as três (por exemplo, médio ou o padrão da interface)</td>
+<td></td>
+<td><code>llms.md</code></td>
+</tr>
+<tr>
+<td><span class="chip ctrl">Controlado (fixo)</span></td>
+<td>Interface</td>
+<td>chat com upload de arquivos para as três</td>
+<td></td>
+<td><code>llms.md</code></td>
+</tr>
+<tr>
+<td><span class="chip ctrl">Controlado (fixo)</span></td>
+<td>Navegação web</td>
+<td>desativada (ou proibida no prompt, se não for possível desativar)</td>
+<td></td>
+<td><code>llms.md</code></td>
+</tr>
+<tr>
+<td><span class="chip ctrl">Controlado (fixo)</span></td>
+<td>Memória e personalização</td>
+<td>desativadas</td>
+<td></td>
+<td><code>llms.md</code></td>
+</tr>
+<tr>
+<td><span class="chip ctrl">Controlado (fixo)</span></td>
+<td>Temperatura (só via API)</td>
+<td>padrão do provedor, registrada; não alterar entre cadeias</td>
+<td></td>
+<td><code>llms.md</code></td>
+</tr>
+<tr>
+<td><span class="chip ctrl">Controlado (fixo)</span></td>
+<td>Prompts</td>
+<td>A, B1 e B2 com texto idêntico; só os campos entre chaves mudam</td>
+<td></td>
+<td><code>pacote/prompts/</code></td>
+</tr>
+<tr>
+<td><span class="chip ctrl">Controlado (fixo)</span></td>
+<td>Informação vedada às LLMs</td>
+<td>selos oficiais, respostas de outras LLMs, conversas de planejamento</td>
+<td></td>
+<td><code>preregistro.md</code></td>
+</tr>
+<tr>
+<td><span class="chip exec">Execução</span></td>
+<td>Ambiente</td>
+<td>o indicado pelos autores (VM dos autores, distribuição e versão do SO)</td>
+<td></td>
+<td><code>registro-factual.md</code></td>
+</tr>
+<tr>
+<td><span class="chip exec">Execução</span></td>
+<td>Recursos da máquina</td>
+<td>CPU, RAM e disco iguais ou superiores aos requisitos do README</td>
+<td></td>
+<td><code>registro-factual.md</code></td>
+</tr>
+<tr>
+<td><span class="chip exec">Execução</span></td>
+<td>Versões das dependências</td>
+<td>saída de <code>--version</code> de compilador, interpretador e bibliotecas</td>
+<td></td>
+<td><code>registro-factual.md</code></td>
+</tr>
+<tr>
+<td><span class="chip exec">Execução</span></td>
+<td>Tempo máximo por reivindicação</td>
+<td>2 h (ajustar ao tempo informado pelos autores)</td>
+<td></td>
+<td><code>roteiro-consolidado.md</code></td>
+</tr>
+<tr>
+<td><span class="chip exec">Execução</span></td>
+<td>Critério de desistência</td>
+<td>erro não documentado que exija desvio D2 em passo essencial, ou tempo máximo atingido</td>
+<td></td>
+<td><code>roteiro-consolidado.md</code></td>
+</tr>
+<tr>
+<td><span class="chip exec">Execução</span></td>
+<td>Classes de desvio</td>
+<td>D0 a D3 (seção 6.3)</td>
+<td></td>
+<td><code>registro-factual.md</code></td>
+</tr>
+<tr>
+<td><span class="chip exec">Execução</span></td>
+<td>Tolerância numérica</td>
+<td>diferença relativa aceita em relação ao resultado publicado (por exemplo, 5%), ou a tolerância declarada pelos autores</td>
+<td></td>
+<td><code>reivindicacoes.md</code></td>
+</tr>
+<tr>
+<td><span class="chip exec">Execução</span></td>
+<td>Contato com autores</td>
+<td>no máximo 1 mensagem, com prazo de resposta (por exemplo, 5 dias)</td>
+<td></td>
+<td><code>registro-factual.md</code></td>
+</tr>
+<tr>
+<td><span class="chip medida">Medida (resposta)</span></td>
+<td>Decisão</td>
+<td>Atribuir, Não atribuir, Indeterminado</td>
+<td></td>
+<td><code>decisoes.csv</code></td>
+</tr>
+<tr>
+<td><span class="chip medida">Medida (resposta)</span></td>
+<td>Confiança</td>
+<td>0 a 100</td>
+<td></td>
+<td><code>decisoes.csv</code></td>
+</tr>
+<tr>
+<td><span class="chip medida">Medida (resposta)</span></td>
+<td>Evidências citadas</td>
+<td>lista arquivo:local, classificada como correta, mal interpretada, inexistente ou não verificável</td>
+<td></td>
+<td><code>evidencias.csv</code></td>
+</tr>
+<tr>
+<td><span class="chip medida">Medida (resposta)</span></td>
+<td>Arquivos efetivamente lidos</td>
+<td>lista declarada pela LLM na seção A</td>
+<td></td>
+<td>conversas exportadas</td>
+</tr>
+<tr>
+<td><span class="chip medida">Medida (resposta)</span></td>
+<td>Status por passo</td>
+<td>sucesso, falha, inconclusivo</td>
+<td></td>
+<td><code>registro-factual.md</code></td>
+</tr>
+<tr>
+<td><span class="chip medida">Medida (resposta)</span></td>
+<td>Tempo e custo</td>
+<td>duração de cada conversa e de cada passo de execução</td>
+<td></td>
+<td><code>decisoes.csv</code>, <code>terminal.log</code></td>
+</tr>
+<tr>
+<td><span class="chip limiar">Limiar de decisão</span></td>
+<td>Consistência com o oficial</td>
+<td>decisão modal = oficial e estabilidade ≥ 2/3</td>
+<td></td>
+<td><code>preregistro.md</code></td>
+</tr>
+<tr>
+<td><span class="chip limiar">Limiar de decisão</span></td>
+<td>Consistência entre LLMs</td>
+<td>as três com a mesma decisão modal</td>
+<td></td>
+<td><code>preregistro.md</code></td>
+</tr>
+<tr>
+<td><span class="chip limiar">Limiar de decisão</span></td>
+<td>Reprodução de uma reivindicação</td>
+<td>resultado dentro da tolerância numérica ou comportamento descrito observado</td>
+<td></td>
+<td><code>preregistro.md</code></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="4-fase-0-preparação-antes-de-qualquer-llm">4. Fase 0: preparação (antes de qualquer LLM)</h2>
+<h3>4.1 Escolha do artefato</h3>
+<p>Use esta lista de verificação. Escolha um artefato que satisfaça todos os itens obrigatórios.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Critério</th>
+<th>Obrigatório?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Está na página de resultados de uma edição do SBSeg ou SBRC em doc-artefatos.github.io</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>O ambiente exigido pelos autores está disponível para você (por exemplo, Linux nativo, VM do VirtualBox com a RAM pedida, Docker, GPU se necessária)</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>O tempo de execução do teste mínimo e do experimento principal, segundo os autores, cabe no prazo</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>Não depende de credencial paga ou de serviço indisponível para as reivindicações principais</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>Há ao menos um selo negado (por exemplo, F e R não atribuídos, ou só R negado)</td>
+<td>Desejável: torna a comparação informativa, pois um artefato com todos os selos não distingue um avaliador criterioso de um que aprova tudo</td>
+</tr>
+</tbody>
+</table></div>
+<p>Se o artefato já escolhido for Foremost-NG ou Mininet-GUI, veja a seção 12.</p>
+<h3>4.2 Fixação da versão</h3>
+<ol>
+<li>Identifique a versão avaliada pelo comitê: tag ou release próxima da data da rodada de avaliação, DOI do Zenodo citado no artigo ou no apêndice, ou o último commit anterior à data de divulgação dos resultados.</li>
+<li>Registre o SHA do commit em <code>versao.md</code>, com a justificativa de por que essa é a versão avaliada.</li>
+<li>Gere o arquivo do repositório: <code>git archive --format=zip -o pacote/artefato.zip &lt;SHA&gt;</code>.</li>
+<li>Se a versão atual do repositório for diferente, registre as diferenças relevantes (README, scripts, dados) com <code>git diff &lt;SHA&gt; HEAD --stat</code>.</li>
+</ol>
+<h3>4.3 Pacote de entrada idêntico</h3>
+<p>Monte a pasta <code>pacote/</code> e não a altere depois:</p>
+<pre><code>pacote/
+  artigo.pdf                 # versão publicada (DOI)
+  artefato.zip               # git archive do SHA fixado
+  instrucoes-oficiais.md     # texto integral da página revinstrucoes da edição
+  reivindicacoes.md          # lista fixada na seção 4.4
+  MANIFESTO.sha256           # sha256sum de todos os arquivos acima
+</code></pre>
+<p>Salve também um snapshot datado da página de resultados (PDF impresso ou link do archive.org) em <code>referencia/selos-oficiais.pdf</code>. Esse arquivo <strong>nunca</strong> é mostrado às LLMs.</p>
+<h3>4.4 Lista fixada de reivindicações principais</h3>
+<p>Antes de consultar qualquer LLM, leia o artigo e preencha <code>reivindicacoes.md</code>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Reivindicação</th>
+<th>Onde está no artigo</th>
+<th>Resultado esperado (número, figura, tabela, comportamento)</th>
+<th>O README indica como reproduzir? (sim, parcial, não)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C1</td>
+<td>...</td>
+<td>Seção 4, Figura 2</td>
+<td>...</td>
+<td>...</td>
+</tr>
+</tbody>
+</table></div>
+<p>Regra para R (escrita aqui e entregue às LLMs): <em>"R é atribuído se as reivindicações marcadas como principais pelos autores no README (ou, na falta dessa marcação, as reivindicações C1 a Cn desta lista) forem reproduzidas"</em>. Isso remove a divergência observada no Mininet-GUI, em que uma LLM exigiu todas as contribuições do artigo e outra aceitou o subconjunto indicado pelos autores. Se você discordar da regra, registre isso, mas mantenha-a igual para as três LLMs.</p>
+<h3>4.5 Insumos externos</h3>
+<p>Procure, antes da execução, os dados necessários às reivindicações (por exemplo, imagens de disco, datasets, chaves de API) no README, no Zenodo, nas issues e nos releases. Se algo faltar, você pode enviar uma única mensagem aos autores pedindo o insumo (isso imita o rebuttal do processo oficial). Registre a pergunta, a data e a resposta. Se o insumo chegar, ele entra no pacote de execução para todas as LLMs.</p>
+<h3>4.6 Configuração das LLMs</h3>
+<p>Registre em <code>llms.md</code>, para cada uma: provedor, nome e versão do modelo exibidos, nível de raciocínio, interface, data e hora de cada cadeia.</p>
+<p>Controle de condições:</p>
+<ul>
+<li>Mesmo tipo de interface para as três na condição principal: chat com upload de arquivos. Se uma delas não aceitar o ZIP, extraia os mesmos arquivos para as três.</li>
+<li><strong>Navegação na web desativada</strong> (ou, se não for possível desativar em alguma, instrução explícita no prompt para não navegar). As três leem somente o pacote.</li>
+<li>Memória e personalização desativadas; conversa nova a cada cadeia.</li>
+<li>Nunca informar os selos oficiais nem resultados de outras LLMs.</li>
+<li>Não usar conversas em que o estudo foi planejado ou discutido.</li>
+</ul>
+<hr />
+<h2 id="5-etapa-a-avaliação-analítica">5. Etapa A: avaliação analítica</h2>
+<p>Anexe o pacote e envie o Prompt A sem alterações, a não ser nos campos entre chaves.</p>
+<h3>Prompt A</h3>
+<pre><code>Atue como revisor do Comitê de Avaliação de Artefatos do {EVENTO EDIÇÃO}. Avalie somente os selos Funcional (F) e Reprodutível (R), seguindo exatamente as instruções oficiais anexadas (instrucoes-oficiais.md).
+
+MATERIAL
+Use exclusivamente os arquivos anexados: artigo.pdf (fonte das reivindicações), artefato.zip (o artefato, na versão {SHA}), instrucoes-oficiais.md e reivindicacoes.md (lista de reivindicações principais e regra para o selo R). Não navegue na web. Se precisar de algo que não está nos anexos, registre como evidência ausente.
+
+TAREFA
+Esta é uma avaliação analítica: você não executou o artefato e não deve afirmar que algo funcionou.
+
+Para cada selo:
+1. Liste os critérios oficiais aplicáveis, citando o trecho das instruções.
+2. Para cada critério, indique: atendido na documentação, não atendido, ou só verificável por execução.
+3. Cite cada evidência no formato [arquivo:seção ou linha] e transcreva o trecho curto que a sustenta.
+4. Decida: Atribuir, Não atribuir ou Indeterminado, usando esta regra:
+   - Não atribuir: há evidência de que um critério obrigatório não é atendido (por exemplo, falta o dado necessário para uma reivindicação principal).
+   - Indeterminado: nenhum critério obrigatório falha na documentação, mas a decisão depende de execução.
+   - Atribuir: somente se os critérios estiverem atendidos com evidência suficiente para isso.
+5. Informe sua confiança de 0 a 100 de que o comitê oficial atribuiu o selo.
+6. Liste o que precisaria ser observado na execução para mudar sua decisão.
+
+Para R, avalie cada reivindicação de reivindicacoes.md separadamente.
+
+FORMATO
+Responda em texto com as seções: A. Materiais examinados (liste os arquivos que você efetivamente abriu); B. Selo F; C. Selo R (por reivindicação); D. Lacunas e riscos.
+Ao final, inclua um bloco JSON exatamente neste formato:
+{&quot;F&quot;: {&quot;decisao&quot;: &quot;...&quot;, &quot;confianca&quot;: 0, &quot;evidencias&quot;: [&quot;arquivo:local&quot;, &quot;...&quot;]},
+ &quot;R&quot;: {&quot;decisao&quot;: &quot;...&quot;, &quot;confianca&quot;: 0, &quot;evidencias&quot;: [&quot;...&quot;],
+       &quot;por_reivindicacao&quot;: {&quot;C1&quot;: &quot;reproduzivel|nao_reproduzivel|depende_execucao&quot;}}}
+</code></pre>
+<p>Mudanças em relação ao Prompt 1 anterior: material fechado e idêntico; regra explícita que distingue "Não atribuir" de "Indeterminado"; confiança numérica (permite comparar calibração); lista de arquivos efetivamente abertos (mostra se a LLM leu tudo); saída em JSON (facilita tabular as 36 decisões).</p>
+<hr />
+<h2 id="6-etapa-b-avaliação-por-execução">6. Etapa B: avaliação por execução</h2>
+<h3>6.1 Prompt B1: plano de execução (mesma conversa)</h3>
+<pre><code>Com base no mesmo material, produza o roteiro para que eu execute o artefato e verifique F e R. Não afirme que executou nada.
+
+Siga somente os procedimentos fornecidos pelos autores. Quando um passo não estiver documentado pelos autores, marque-o como [NÃO DOCUMENTADO] e justifique por que ele é necessário.
+
+Para cada passo: identificador (P1, P2...), selo e reivindicação relacionados, diretório, comando exato, resultado esperado segundo os autores, evidência a salvar, critério de sucesso, critério de falha e critério de interrupção.
+
+Inclua: requisitos de hardware e software do ambiente; teste mínimo (F); um bloco por reivindicação de reivindicacoes.md (R); tempo estimado.
+Ao final, uma tabela com todos os passos.
+</code></pre>
+<h3>6.2 Consolidação do roteiro único</h3>
+<p>Depois de receber o plano das três LLMs na cadeia 1:</p>
+<ol>
+<li>Monte <code>execucao/roteiro-consolidado.md</code> com a <strong>união</strong> dos passos, mantendo a origem de cada um (por exemplo, "P3: proposto por OpenAI e Google").</li>
+<li>Marque os passos [NÃO DOCUMENTADO]. Eles são executados, mas em seção separada do registro, como desvios declarados.</li>
+<li>Defina um tempo máximo por reivindicação (por exemplo, 2 horas) e o critério de desistência.</li>
+</ol>
+<h3>6.3 Execução de referência (aluno)</h3>
+<p><strong>Ambiente.</strong> O indicado pelos autores. Se os autores fornecem VM, use a VM. Se indicam uma distribuição Linux, use essa distribuição em VM limpa. Registre: sistema operacional, kernel, CPU, RAM, disco, versões das dependências (<code>gcc --version</code>, <code>python3 --version</code>, <code>node --version</code> etc.) e se o ambiente atende aos requisitos do README. Não use ambiente diferente sem registrar o motivo; uma falha num ambiente fora dos requisitos não é evidência contra o artefato.</p>
+<p><strong>Registro.</strong> Grave toda a sessão de terminal (<code>script -t 2&gt;execucao/tempo.log execucao/terminal.log</code> ou <code>asciinema rec</code>). Para cada passo, salve: comando, diretório, código de saída, tempo, trecho relevante da saída e hashes dos arquivos gerados (<code>sha256sum</code>). Para interfaces gráficas, capturas de tela com data e hora.</p>
+<p><strong>Classificação de desvios.</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Significado</th>
+<th>Efeito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D0</td>
+<td>Seguiu exatamente a documentação</td>
+<td>Nenhum</td>
+</tr>
+<tr>
+<td>D1</td>
+<td>Correção trivial e óbvia (por exemplo, instalar pacote listado com outro nome na distribuição)</td>
+<td>Registrar</td>
+</tr>
+<tr>
+<td>D2</td>
+<td>Contorno não documentado necessário para prosseguir</td>
+<td>Registrar e informar às LLMs como desvio</td>
+</tr>
+<tr>
+<td>D3</td>
+<td>Passo de origem externa (por exemplo, dataset público escolhido por você, como o DFTT)</td>
+<td>Registrar como evidência complementar, não como reprodução de reivindicação</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Comparação com o esperado.</strong> Para cada reivindicação, compare o resultado obtido com o publicado (número, figura, tabela). Para resultados quantitativos, registre diferença absoluta e relativa. Para recuperação de arquivos ou detecção, compare com o gabarito (quantos esperados, quantos obtidos, quantos corretos), não apenas a contagem.</p>
+<p><strong>Saída da etapa.</strong> Um único arquivo <code>execucao/registro-factual.md</code>, com o mesmo conteúdo para as três LLMs, contendo: ambiente; tabela de passos (passo, origem, comando, esperado, observado, evidência, status sucesso/falha/inconclusivo, desvio D0 a D3); resultados por reivindicação; insumos ausentes e respostas dos autores. O registro descreve fatos; não contém sua opinião sobre os selos.</p>
+<h3>6.4 Prompt B2: decisão após execução (mesma conversa, para as três cadeias de cada LLM)</h3>
+<pre><code>Segue em anexo o registro factual da execução do artefato (registro-factual.md), feita em ambiente que {atende / não atende, motivo} aos requisitos dos autores. O roteiro executado consolidou os planos de três revisores, incluindo o seu.
+
+Com base no registro e no material anterior:
+1. Para cada passo relevante, diga se o resultado confirma, contradiz ou não altera sua avaliação analítica.
+2. Decida novamente F e R (Atribuir, Não atribuir ou Indeterminado) com a mesma regra de antes. Use Indeterminado somente se faltar evidência que o registro não fornece; diga exatamente qual.
+3. Trate passos marcados D2 e D3 como evidência complementar, não como reprodução das reivindicações dos autores.
+4. Informe confiança de 0 a 100 e explique a mudança em relação à decisão analítica, se houver.
+Repita o bloco JSON da etapa A com as novas decisões e acrescente &quot;mudou&quot;: true/false para cada selo.
+</code></pre>
+<p>Observação: o Prompt 3 anterior (simulação) mandava marcar "Indeterminado" sempre que a decisão dependesse de execução, o que fabricava mudanças de decisão. Ele não é usado aqui.</p>
+<h3>6.5 Repetições</h3>
+<p>Repita Prompt A, B1 e B2 em mais duas conversas novas por LLM (cadeias 2 e 3), usando <strong>o mesmo registro factual</strong>. Os planos das cadeias 2 e 3 são guardados para análise, mas só precisam ser executados se contiverem um passo essencial que não estava no roteiro consolidado; nesse caso, execute-o, acrescente ao registro e reenvie o registro atualizado a todas as cadeias.</p>
+<hr />
+<h2 id="7-verificação-das-evidências-citadas-item-9-da-tarefa">7. Verificação das evidências citadas (item 9 da tarefa)</h2>
+<ol>
+<li>Peça a um colega que renomeie as respostas como M1, M2 e M3, sem indicar o provedor (verificação cega).</li>
+<li>Extraia todas as evidências citadas em <code>evidencias.csv</code>.</li>
+<li>Classifique cada uma abrindo o arquivo no SHA fixado:</li>
+</ol>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Classe</th>
+<th>Definição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Correta</td>
+<td>Existe e sustenta a afirmação</td>
+</tr>
+<tr>
+<td>Mal interpretada</td>
+<td>Existe, mas não sustenta a afirmação</td>
+</tr>
+<tr>
+<td>Inexistente</td>
+<td>Arquivo, seção ou trecho não existe (alucinação)</td>
+</tr>
+<tr>
+<td>Não verificável</td>
+<td>Referência vaga demais para conferir</td>
+</tr>
+</tbody>
+</table></div>
+<ol start="4">
+<li>Só depois revele os provedores.</li>
+</ol>
+<hr />
+<h2 id="8-métricas-e-análise">8. Métricas e análise</h2>
+<p>Todas descritivas; com um artefato, não há base para testes estatísticos, e o relatório deve dizer isso.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Medida</th>
+<th>Como calcular</th>
+<th>Responde</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Decisão modal</td>
+<td>Decisão mais frequente nas 3 cadeias, por LLM, etapa e selo</td>
+<td>Q1, Q2</td>
+</tr>
+<tr>
+<td>Estabilidade</td>
+<td>Número de cadeias com a decisão modal (3/3, 2/3, 1/3)</td>
+<td>Robustez de cada resposta</td>
+</tr>
+<tr>
+<td>Cobertura</td>
+<td>Proporção de decisões diferentes de Indeterminado</td>
+<td>Distingue abstenção de erro</td>
+</tr>
+<tr>
+<td>Concordância com o oficial</td>
+<td>Decisão modal igual ao selo oficial (Atribuir = Atribuir; não atribuído = Não atribuir)</td>
+<td>Q1, Q2</td>
+</tr>
+<tr>
+<td>Matriz de transição A → B</td>
+<td>Contagem de pares (decisão analítica, decisão após execução)</td>
+<td>Q2, item 12</td>
+</tr>
+<tr>
+<td>Concordância entre LLMs</td>
+<td>Proporção de pares de LLMs com mesma decisão modal, por etapa e selo</td>
+<td>Q3</td>
+</tr>
+<tr>
+<td>Precisão das evidências</td>
+<td>Corretas / total citadas, por LLM</td>
+<td>Q4</td>
+</tr>
+<tr>
+<td>Calibração</td>
+<td>Confiança média quando acertou versus quando errou</td>
+<td>Qualidade do julgamento</td>
+</tr>
+<tr>
+<td>Linha de base humana</td>
+<td>Decisão do aluno versus oficial e versus LLMs</td>
+<td>Teto realista</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Classificação obrigatória de cada divergência com o oficial.</strong> Para cada decisão modal que diverge do selo oficial, atribua uma causa:</p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 810 404" role="img" aria-label="Árvore de decisão para classificar a causa de uma divergência" font-family="Inter, system-ui, sans-serif" style="min-width:640px"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker></defs><rect x="20" y="20" width="440" height="44" rx="7" class="nb"/><text x="34" y="46.5" font-size="12.5" text-anchor="start" font-weight="500" class="ink">A evidência citada pela LLM existe e foi lida corretamente?</text><line x1="462" y1="42.0" x2="538" y2="42.0" class="arr" marker-end="url(#ah)"/><text x="500" y="36.0" font-size="11.5" text-anchor="middle" font-weight="600" class="muted">Não</text><rect x="540" y="20" width="250" height="44" rx="7" class="nb-key"/><text x="665" y="46.5" font-size="12.5" text-anchor="middle" font-weight="600" class="ink">Erro de julgamento da LLM</text><line x1="80" y1="65" x2="80" y2="85" class="arr" marker-end="url(#ah)"/><text x="90" y="79.0" font-size="11.5" text-anchor="start" font-weight="600" class="muted">Sim</text><rect x="20" y="86" width="440" height="44" rx="7" class="nb"/><text x="34" y="112.5" font-size="12.5" text-anchor="start" font-weight="500" class="ink">A divergência vem de como o critério foi interpretado?</text><line x1="462" y1="108.0" x2="538" y2="108.0" class="arr" marker-end="url(#ah)"/><text x="500" y="102.0" font-size="11.5" text-anchor="middle" font-weight="600" class="muted">Sim</text><rect x="540" y="86" width="250" height="44" rx="7" class="nb-key"/><text x="665" y="112.5" font-size="12.5" text-anchor="middle" font-weight="600" class="ink">Interpretação do critério</text><line x1="80" y1="131" x2="80" y2="151" class="arr" marker-end="url(#ah)"/><text x="90" y="145.0" font-size="11.5" text-anchor="start" font-weight="600" class="muted">Não</text><rect x="20" y="152" width="440" height="44" rx="7" class="nb"/><text x="34" y="178.5" font-size="12.5" text-anchor="start" font-weight="500" class="ink">Falta insumo que o comitê pode ter recebido (rebuttal)?</text><line x1="462" y1="174.0" x2="538" y2="174.0" class="arr" marker-end="url(#ah)"/><text x="500" y="168.0" font-size="11.5" text-anchor="middle" font-weight="600" class="muted">Sim</text><rect x="540" y="152" width="250" height="44" rx="7" class="nb-key"/><text x="665" y="178.5" font-size="12.5" text-anchor="middle" font-weight="600" class="ink">Insumo indisponível publicamente</text><line x1="80" y1="197" x2="80" y2="217" class="arr" marker-end="url(#ah)"/><text x="90" y="211.0" font-size="11.5" text-anchor="start" font-weight="600" class="muted">Não</text><rect x="20" y="218" width="440" height="44" rx="7" class="nb"/><text x="34" y="244.5" font-size="12.5" text-anchor="start" font-weight="500" class="ink">O SHA avaliado difere da versão do comitê?</text><line x1="462" y1="240.0" x2="538" y2="240.0" class="arr" marker-end="url(#ah)"/><text x="500" y="234.0" font-size="11.5" text-anchor="middle" font-weight="600" class="muted">Sim</text><rect x="540" y="218" width="250" height="44" rx="7" class="nb-key"/><text x="665" y="244.5" font-size="12.5" text-anchor="middle" font-weight="600" class="ink">Diferença de versão</text><line x1="80" y1="263" x2="80" y2="283" class="arr" marker-end="url(#ah)"/><text x="90" y="277.0" font-size="11.5" text-anchor="start" font-weight="600" class="muted">Não</text><rect x="20" y="284" width="440" height="44" rx="7" class="nb"/><text x="34" y="310.5" font-size="12.5" text-anchor="start" font-weight="500" class="ink">A falha some no ambiente indicado pelos autores?</text><line x1="462" y1="306.0" x2="538" y2="306.0" class="arr" marker-end="url(#ah)"/><text x="500" y="300.0" font-size="11.5" text-anchor="middle" font-weight="600" class="muted">Sim</text><rect x="540" y="284" width="250" height="44" rx="7" class="nb-key"/><text x="665" y="310.5" font-size="12.5" text-anchor="middle" font-weight="600" class="ink">Ambiente</text><line x1="80" y1="329" x2="80" y2="349" class="arr" marker-end="url(#ah)"/><text x="90" y="343.0" font-size="11.5" text-anchor="start" font-weight="600" class="muted">Não</text><rect x="20" y="350" width="440" height="44" rx="7" class="nb-warn"/><text x="240.0" y="376.5" font-size="12.5" text-anchor="middle" font-weight="600" class="ink">Possível erro do comitê (evidência pública não sustenta o selo)</text></svg></div><figcaption><strong>Figura 3.</strong> Classificação obrigatória da causa de cada divergência com o selo oficial. A ordem das perguntas evita atribuir à LLM um erro que vem do processo, da versão ou do ambiente.</figcaption></figure>
+
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Causa</th>
+<th>Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Erro de julgamento da LLM</td>
+<td>Ignorou uma evidência existente e correta</td>
+</tr>
+<tr>
+<td>Interpretação do critério</td>
+<td>Exigiu todas as contribuições do artigo em vez das indicadas pelos autores</td>
+</tr>
+<tr>
+<td>Insumo indisponível publicamente</td>
+<td>Dado entregue ao comitê no rebuttal ou removido do repositório</td>
+</tr>
+<tr>
+<td>Diferença de versão</td>
+<td>O README do SHA atual difere do avaliado</td>
+</tr>
+<tr>
+<td>Ambiente</td>
+<td>Falha atribuível ao ambiente, não ao artefato</td>
+</tr>
+<tr>
+<td>Possível erro do comitê</td>
+<td>A evidência pública não sustenta o selo atribuído</td>
+</tr>
+</tbody>
+</table></div>
+<p>Isso evita a conclusão automática "a LLM errou" quando a divergência tem outra origem.</p>
+<p><strong>Critério de consistência (definido antes da coleta).</strong> Uma LLM é considerada consistente com a avaliação oficial em um selo quando sua decisão modal após execução coincide com o oficial e a estabilidade é de pelo menos 2/3. As LLMs são consideradas consistentes entre si quando as três têm a mesma decisão modal.</p>
+<hr />
+<h2 id="9-tabelas-a-entregar">9. Tabelas a entregar</h2>
+<p><strong>Tabela comparativa (item 10 da tarefa):</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>LLM</th>
+<th>Selo</th>
+<th>Oficial</th>
+<th>Analítica (modal, estabilidade)</th>
+<th>Após execução (modal, estabilidade)</th>
+<th>Coincide (A / B)</th>
+<th>Mudou?</th>
+<th>Causa da divergência</th>
+<th>Evidência-chave</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OpenAI</td>
+<td>F</td>
+<td>...</td>
+<td>Indet. (3/3)</td>
+<td>Atribuir (3/3)</td>
+<td>Não / Sim</td>
+<td>Sim</td>
+<td>n.a.</td>
+<td>P4: teste mínimo, saída 0</td>
+</tr>
+</tbody>
+</table></div>
+<p>Acrescente uma linha "Humano" por selo.</p>
+<p><strong>Execução confirma ou contradiz (item 12):</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>LLM</th>
+<th>Selo</th>
+<th>Decisão A</th>
+<th>Decisão B</th>
+<th>Relação</th>
+<th>Passo do registro que motivou</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>...</td>
+<td>F</td>
+<td>Indet.</td>
+<td>Atribuir</td>
+<td>Resolveu incerteza</td>
+<td>P4, P5</td>
+</tr>
+</tbody>
+</table></div>
+<p>Use as categorias: confirma (A = B, com evidência coerente), contradiz (A e B opostas: Atribuir versus Não atribuir), resolve incerteza (Indeterminado para decisão firme), introduz incerteza (decisão firme para Indeterminado).</p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 730 248" role="img" aria-label="Categorias de relação entre decisão analítica e após execução" font-family="Inter, system-ui, sans-serif" style="min-width:640px"><text x="455.0" y="22" font-size="13" text-anchor="middle" font-weight="700" class="ink">Decisão após execução (B2)</text><text x="285.0" y="52" font-size="12.5" text-anchor="middle" font-weight="600" class="muted">Atribuir</text><text x="455.0" y="52" font-size="12.5" text-anchor="middle" font-weight="600" class="muted">Indeterminado</text><text x="625.0" y="52" font-size="12.5" text-anchor="middle" font-weight="600" class="muted">Não atribuir</text><text x="22" y="151.0" font-size="13" font-weight="700" class="ink" text-anchor="middle" transform="rotate(-90 22 151.0)">Decisão analítica (A)</text><text x="188" y="101.5" font-size="12.5" text-anchor="end" font-weight="600" class="muted">Atribuir</text><g><title>Atribuir para Atribuir: Confirma</title><rect x="202" y="72" width="166" height="50" rx="5" class="c-conf"/><text x="285.0" y="101.5" font-size="13" text-anchor="middle" font-weight="600" class="ink">Confirma</text></g><g><title>Atribuir para Indeterminado: Introduz incerteza</title><rect x="372" y="72" width="166" height="50" rx="5" class="c-intro"/><text x="455.0" y="101.5" font-size="13" text-anchor="middle" font-weight="600" class="ink">Introduz incerteza</text></g><g><title>Atribuir para Não atribuir: Contradiz</title><rect x="542" y="72" width="166" height="50" rx="5" class="c-contra"/><text x="625.0" y="101.5" font-size="13" text-anchor="middle" font-weight="600" class="ink">Contradiz</text></g><text x="188" y="155.5" font-size="12.5" text-anchor="end" font-weight="600" class="muted">Indeterminado</text><g><title>Indeterminado para Atribuir: Resolve incerteza</title><rect x="202" y="126" width="166" height="50" rx="5" class="c-res"/><text x="285.0" y="155.5" font-size="13" text-anchor="middle" font-weight="600" class="ink">Resolve incerteza</text></g><g><title>Indeterminado para Indeterminado: Confirma</title><rect x="372" y="126" width="166" height="50" rx="5" class="c-conf"/><text x="455.0" y="155.5" font-size="13" text-anchor="middle" font-weight="600" class="ink">Confirma</text></g><g><title>Indeterminado para Não atribuir: Resolve incerteza</title><rect x="542" y="126" width="166" height="50" rx="5" class="c-res"/><text x="625.0" y="155.5" font-size="13" text-anchor="middle" font-weight="600" class="ink">Resolve incerteza</text></g><text x="188" y="209.5" font-size="12.5" text-anchor="end" font-weight="600" class="muted">Não atribuir</text><g><title>Não atribuir para Atribuir: Contradiz</title><rect x="202" y="180" width="166" height="50" rx="5" class="c-contra"/><text x="285.0" y="209.5" font-size="13" text-anchor="middle" font-weight="600" class="ink">Contradiz</text></g><g><title>Não atribuir para Indeterminado: Introduz incerteza</title><rect x="372" y="180" width="166" height="50" rx="5" class="c-intro"/><text x="455.0" y="209.5" font-size="13" text-anchor="middle" font-weight="600" class="ink">Introduz incerteza</text></g><g><title>Não atribuir para Não atribuir: Confirma</title><rect x="542" y="180" width="166" height="50" rx="5" class="c-conf"/><text x="625.0" y="209.5" font-size="13" text-anchor="middle" font-weight="600" class="ink">Confirma</text></g></svg></div><figcaption><strong>Figura 4.</strong> Categorias para a tabela “execução confirma ou contradiz” (item 12 da tarefa), definidas antes da coleta.</figcaption></figure>
+
+<hr />
+<h2 id="10-fluxograma-item-13">10. Fluxograma (item 13)</h2>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 820 416" role="img" aria-label="Fluxograma completo do novo protocolo" font-family="Inter, system-ui, sans-serif" style="min-width:640px"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker></defs><text x="10" y="49.5" font-size="13" text-anchor="start" font-weight="700" class="ink">Fase 0</text><rect x="130" y="20" width="158" height="50" rx="7" class="nb"/><text x="209.0" y="42.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Escolher artefato</text><text x="209.0" y="59.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">critérios de viabilidade</text><line x1="289" y1="45.0" x2="301" y2="45.0" class="arr" marker-end="url(#ah)"/><rect x="302" y="20" width="158" height="50" rx="7" class="nb"/><text x="381.0" y="42.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Fixar SHA</text><text x="381.0" y="59.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">versão do comitê</text><line x1="461" y1="45.0" x2="473" y2="45.0" class="arr" marker-end="url(#ah)"/><rect x="474" y="20" width="158" height="50" rx="7" class="nb"/><text x="553.0" y="42.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Pacote idêntico</text><text x="553.0" y="59.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">+ reivindicações</text><line x1="633" y1="45.0" x2="645" y2="45.0" class="arr" marker-end="url(#ah)"/><rect x="646" y="20" width="158" height="50" rx="7" class="nb"/><text x="725.0" y="42.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Pré-registro</text><text x="725.0" y="59.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">+ decisão humana</text><path d="M725.0,70 C725.0,87.0 209.0,87.0 209.0,102" class="arr" fill="none" marker-end="url(#ah)"/><text x="10" y="133.5" font-size="13" text-anchor="start" font-weight="700" class="ink">Etapa A e B1</text><rect x="130" y="104" width="158" height="50" rx="7" class="nb-llm"/><text x="209.0" y="126.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">OpenAI</text><text x="209.0" y="143.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">Prompt A, B1</text><rect x="302" y="104" width="158" height="50" rx="7" class="nb-llm"/><text x="381.0" y="126.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Anthropic</text><text x="381.0" y="143.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">Prompt A, B1</text><rect x="474" y="104" width="158" height="50" rx="7" class="nb-llm"/><text x="553.0" y="126.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Google</text><text x="553.0" y="143.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">Prompt A, B1</text><rect x="646" y="104" width="158" height="50" rx="7" class="nb"/><text x="725.0" y="126.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Roteiro</text><text x="725.0" y="143.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">união dos planos</text><path d="M725.0,154 C725.0,171.0 209.0,171.0 209.0,186" class="arr" fill="none" marker-end="url(#ah)"/><text x="10" y="217.5" font-size="13" text-anchor="start" font-weight="700" class="ink">Execução</text><rect x="130" y="188" width="158" height="50" rx="7" class="nb-ok"/><text x="209.0" y="210.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Ambiente</text><text x="209.0" y="227.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">dos autores</text><line x1="289" y1="213.0" x2="301" y2="213.0" class="arr" marker-end="url(#ah)"/><rect x="302" y="188" width="158" height="50" rx="7" class="nb-ok"/><text x="381.0" y="210.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Executar</text><text x="381.0" y="227.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">D0 a D3</text><line x1="461" y1="213.0" x2="473" y2="213.0" class="arr" marker-end="url(#ah)"/><rect x="474" y="188" width="158" height="50" rx="7" class="nb-ok"/><text x="553.0" y="210.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Comparar</text><text x="553.0" y="227.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">com o publicado</text><line x1="633" y1="213.0" x2="645" y2="213.0" class="arr" marker-end="url(#ah)"/><rect x="646" y="188" width="158" height="50" rx="7" class="nb-key"/><text x="725.0" y="210.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Registro factual</text><text x="725.0" y="227.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">único</text><path d="M725.0,238 C725.0,255.0 209.0,255.0 209.0,270" class="arr" fill="none" marker-end="url(#ah)"/><text x="10" y="301.5" font-size="13" text-anchor="start" font-weight="700" class="ink">Etapa B2</text><rect x="130" y="272" width="158" height="50" rx="7" class="nb-llm"/><text x="209.0" y="294.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">OpenAI</text><text x="209.0" y="311.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">Prompt B2</text><rect x="302" y="272" width="158" height="50" rx="7" class="nb-llm"/><text x="381.0" y="294.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Anthropic</text><text x="381.0" y="311.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">Prompt B2</text><rect x="474" y="272" width="158" height="50" rx="7" class="nb-llm"/><text x="553.0" y="294.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Google</text><text x="553.0" y="311.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">Prompt B2</text><rect x="646" y="272" width="158" height="50" rx="7" class="nb"/><text x="725.0" y="294.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Cadeias 2 e 3</text><text x="725.0" y="311.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">repetição</text><path d="M725.0,322 C725.0,339.0 209.0,339.0 209.0,354" class="arr" fill="none" marker-end="url(#ah)"/><text x="10" y="385.5" font-size="13" text-anchor="start" font-weight="700" class="ink">Análise</text><rect x="130" y="356" width="158" height="50" rx="7" class="nb"/><text x="209.0" y="378.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Verificação</text><text x="209.0" y="395.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">cega das evidências</text><line x1="289" y1="381.0" x2="301" y2="381.0" class="arr" marker-end="url(#ah)"/><rect x="302" y="356" width="158" height="50" rx="7" class="nb"/><text x="381.0" y="378.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Métricas</text><text x="381.0" y="395.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">modal, estabilidade</text><line x1="461" y1="381.0" x2="473" y2="381.0" class="arr" marker-end="url(#ah)"/><rect x="474" y="356" width="158" height="50" rx="7" class="nb"/><text x="553.0" y="378.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Causas</text><text x="553.0" y="395.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">das divergências</text><line x1="633" y1="381.0" x2="645" y2="381.0" class="arr" marker-end="url(#ah)"/><rect x="646" y="356" width="158" height="50" rx="7" class="nb"/><text x="725.0" y="378.0" font-size="13" text-anchor="middle" font-weight="600" class="ink">Conclusão</text><text x="725.0" y="395.0" font-size="11.5" text-anchor="middle" font-weight="400" class="muted">critério prévio</text></svg></div><figcaption><strong>Figura 5.</strong> Fluxograma completo do novo protocolo (item 13 da tarefa). Em azul, interações com as LLMs; em verde, a execução; em destaque, o registro factual único.</figcaption></figure>
+
+<hr />
+<h2 id="11-estrutura-de-registros">11. Estrutura de registros</h2>
+<pre><code>runs/&lt;evento-edicao&gt;--&lt;artefato&gt;/
+  preregistro.md
+  versao.md
+  llms.md
+  pacote/                       # entrada idêntica, com MANIFESTO.sha256
+  referencia/selos-oficiais.pdf
+  humano/decisao-analitica.md
+  humano/decisao-final.md
+  llm-openai/cadeia-1.md ... cadeia-3.md      # conversa integral exportada
+  llm-anthropic/cadeia-1.md ... cadeia-3.md
+  llm-google/cadeia-1.md ... cadeia-3.md
+  execucao/roteiro-consolidado.md
+  execucao/terminal.log
+  execucao/registro-factual.md
+  execucao/evidencias/          # capturas, saídas, hashes
+  analise/decisoes.csv          # uma linha por decisão (36 + humano)
+  analise/evidencias.csv
+  analise/divergencias.md
+</code></pre>
+<p>Esquema de <code>decisoes.csv</code>: <code>llm,modelo,versao,esforco,cadeia,etapa,selo,decisao,confianca,oficial,coincide,mudou,data_hora,arquivo_conversa</code>.</p>
+<p>Cada arquivo de conversa começa com data, hora, modelo, versão e interface. Todo caminho citado nos relatórios deve existir nesta estrutura.</p>
+<hr />
+<h2 id="12-aplicação-aos-dois-artefatos-já-estudados">12. Aplicação aos dois artefatos já estudados</h2>
+<h3>Foremost-NG (SBSeg 2025)</h3>
+<ul>
+<li>Executar em VM Ubuntu limpa (a versão sugerida pelos autores), não em Windows/MSYS2. Repetir lá a extração ELF que saiu truncada (1.956 de 2.648 bytes) para saber se o problema é do artefato ou do ambiente.</li>
+<li>Procurar <code>evidence2.dd</code> no Zenodo, nos releases e nas issues; se não houver, perguntar aos autores (seção 4.5). Se o arquivo não for obtido, registrar R como "não reproduzível com material público" e classificar a divergência como "insumo indisponível publicamente".</li>
+<li>O DFTT #11 entra como passo D3: útil para F, comparado com o gabarito oficial do DFTT (arquivos esperados versus recuperados), mas não como reprodução da Figura 2.</li>
+<li>Fixar o SHA da época da avaliação e verificar se ele difere de <code>bb812a22…</code>.</li>
+</ul>
+<h3>Mininet-GUI (SBRC 2025)</h3>
+<ul>
+<li>Usar a VM fornecida pelos autores no VirtualBox, com a RAM indicada (resolver a divergência de RAM entre README e VM antes, registrando qual valor foi usado).</li>
+<li>Executar o teste mínimo de nove passos (GUI, controlador, topologia Single com 2 hosts, Pingall, exportação) e as duas reivindicações documentadas (geração de topologias e WebShell), com capturas de tela.</li>
+<li>Incluir o artigo no pacote (faltou no Prompt 1 anterior) e fixar em <code>reivindicacoes.md</code> se R considera as duas reivindicações indicadas pelos autores ou as seis contribuições do artigo.</li>
+</ul>
+<p>Se for preciso escolher um só, o Mininet-GUI tende a gerar resultados mais limpos: tem teste mínimo e seção de experimentos documentados, e o bloqueio anterior foi apenas de ambiente. O Foremost-NG continua bloqueado em R enquanto <code>evidence2.dd</code> não estiver disponível.</p>
+<hr />
+<h2 id="13-ameaças-à-validade-que-permanecem">13. Ameaças à validade que permanecem</h2>
+<ul>
+<li><strong>Um artefato só:</strong> as conclusões valem para esse artefato. [Opcional] Avaliar de 4 a 6 artefatos, incluindo pelo menos 2 com F ou R negados, permite calcular kappa entre LLMs e com o oficial.</li>
+<li><strong>Referência oficial imperfeita:</strong> o comitê teve rebuttal, discussão e possivelmente material privado. A classificação de causas (seção 8) mitiga, mas não elimina, esse problema.</li>
+<li><strong>Execução feita pelo aluno:</strong> erros do aluno contaminam o registro de todas as LLMs igualmente. Isso é preferível ao confundimento anterior, mas deve ser declarado. Em dupla, um membro executa e o outro confere o registro.</li>
+<li><strong>Versões de modelos mudam:</strong> registrar data e versão; os resultados valem para aquelas versões.</li>
+<li><strong>Ancoragem:</strong> como B2 é feito na mesma conversa de A, a LLM pode resistir a mudar de decisão. Isso é desejado pela tarefa (confirmar ou questionar a análise), mas pode ser medido [Opcional] com uma cadeia extra em que B2 é enviado em conversa nova, sem a etapa A.</li>
+</ul>
+<hr />
+<h2 id="14-esforço-estimado">14. Esforço estimado</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Atividade</th>
+<th>Tempo aproximado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fase 0 (escolha, versão, pacote, reivindicações, pré-registro)</td>
+<td>3 a 4 h</td>
+</tr>
+<tr>
+<td>Etapa A e B1 (3 LLMs × 3 cadeias)</td>
+<td>2 h</td>
+</tr>
+<tr>
+<td>Consolidação do roteiro</td>
+<td>1 h</td>
+</tr>
+<tr>
+<td>Execução de referência</td>
+<td>3 a 6 h (depende do artefato)</td>
+</tr>
+<tr>
+<td>Etapa B2 (9 conversas)</td>
+<td>1 h</td>
+</tr>
+<tr>
+<td>Verificação cega de evidências</td>
+<td>2 a 3 h</td>
+</tr>
+<tr>
+<td>Análise, tabelas, fluxograma, conclusão</td>
+<td>3 h</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>15 a 20 h</strong> (cabe numa dupla em uma semana)</td>
+</tr>
+</tbody>
+</table></div>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 800 320" role="img" aria-label="Esforço estimado por atividade" font-family="Inter, system-ui, sans-serif" style="min-width:640px"><line x1="200.0" x2="200.0" y1="22" y2="268" class="grid"/><text x="200.0" y="286" font-size="12" text-anchor="middle" font-weight="400" class="muted">0 h</text><line x1="286.6666666666667" x2="286.6666666666667" y1="22" y2="268" class="grid"/><text x="286.6666666666667" y="286" font-size="12" text-anchor="middle" font-weight="400" class="muted">1 h</text><line x1="373.33333333333337" x2="373.33333333333337" y1="22" y2="268" class="grid"/><text x="373.33333333333337" y="286" font-size="12" text-anchor="middle" font-weight="400" class="muted">2 h</text><line x1="460.0" x2="460.0" y1="22" y2="268" class="grid"/><text x="460.0" y="286" font-size="12" text-anchor="middle" font-weight="400" class="muted">3 h</text><line x1="546.6666666666667" x2="546.6666666666667" y1="22" y2="268" class="grid"/><text x="546.6666666666667" y="286" font-size="12" text-anchor="middle" font-weight="400" class="muted">4 h</text><line x1="633.3333333333333" x2="633.3333333333333" y1="22" y2="268" class="grid"/><text x="633.3333333333333" y="286" font-size="12" text-anchor="middle" font-weight="400" class="muted">5 h</text><line x1="720.0" x2="720.0" y1="22" y2="268" class="grid"/><text x="720.0" y="286" font-size="12" text-anchor="middle" font-weight="400" class="muted">6 h</text><text x="188" y="45.5" font-size="13" text-anchor="end" font-weight="500" class="ink">Fase 0: preparação</text><g><title>Fase 0: preparação: 3 a 4 h</title><rect x="200" y="30" width="260.0" height="22" rx="4" class="bar-s1"/><rect x="462.0" y="30" width="84.66666666666667" height="22" rx="4" class="bar-s1-light"/></g><text x="554.6666666666667" y="45.5" font-size="12.5" text-anchor="start" font-weight="600" class="ink">3 a 4 h</text><text x="188" y="79.5" font-size="13" text-anchor="end" font-weight="500" class="ink">Etapas A e B1</text><g><title>Etapas A e B1: 2 a 2 h</title><rect x="200" y="64" width="173.33333333333334" height="22" rx="4" class="bar-s1"/></g><text x="381.33333333333337" y="79.5" font-size="12.5" text-anchor="start" font-weight="600" class="ink">2 h</text><text x="188" y="113.5" font-size="13" text-anchor="end" font-weight="500" class="ink">Roteiro consolidado</text><g><title>Roteiro consolidado: 1 a 1 h</title><rect x="200" y="98" width="86.66666666666667" height="22" rx="4" class="bar-s1"/></g><text x="294.6666666666667" y="113.5" font-size="12.5" text-anchor="start" font-weight="600" class="ink">1 h</text><text x="188" y="147.5" font-size="13" text-anchor="end" font-weight="500" class="ink">Execução de referência</text><g><title>Execução de referência: 3 a 6 h</title><rect x="200" y="132" width="260.0" height="22" rx="4" class="bar-s1"/><rect x="462.0" y="132" width="258.0" height="22" rx="4" class="bar-s1-light"/></g><text x="728.0" y="147.5" font-size="12.5" text-anchor="start" font-weight="600" class="ink">3 a 6 h</text><text x="188" y="181.5" font-size="13" text-anchor="end" font-weight="500" class="ink">Etapa B2</text><g><title>Etapa B2: 1 a 1 h</title><rect x="200" y="166" width="86.66666666666667" height="22" rx="4" class="bar-s1"/></g><text x="294.6666666666667" y="181.5" font-size="12.5" text-anchor="start" font-weight="600" class="ink">1 h</text><text x="188" y="215.5" font-size="13" text-anchor="end" font-weight="500" class="ink">Verificação cega</text><g><title>Verificação cega: 2 a 3 h</title><rect x="200" y="200" width="173.33333333333334" height="22" rx="4" class="bar-s1"/><rect x="375.33333333333337" y="200" width="84.66666666666667" height="22" rx="4" class="bar-s1-light"/></g><text x="468.0" y="215.5" font-size="12.5" text-anchor="start" font-weight="600" class="ink">2 a 3 h</text><text x="188" y="249.5" font-size="13" text-anchor="end" font-weight="500" class="ink">Análise e relatório</text><g><title>Análise e relatório: 3 a 3 h</title><rect x="200" y="234" width="260.0" height="22" rx="4" class="bar-s1"/></g><text x="468.0" y="249.5" font-size="12.5" text-anchor="start" font-weight="600" class="ink">3 h</text><rect x="200" y="295" width="18" height="12" rx="3" class="bar-s1"/><text x="226" y="306" font-size="12" text-anchor="start" font-weight="400" class="muted">mínimo</text><rect x="300" y="295" width="18" height="12" rx="3" class="bar-s1-light"/><text x="326" y="306" font-size="12" text-anchor="start" font-weight="400" class="muted">faixa até o máximo · total 15 a 20 h</text></svg></div><figcaption><strong>Figura 6.</strong> Esforço estimado por atividade, para uma dupla.</figcaption></figure>
+
+<hr />
+<h2 id="15-correspondência-com-os-itens-da-tarefa">15. Correspondência com os itens da tarefa</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Onde é atendido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Escolher artefato</td>
+<td>4.1</td>
+</tr>
+<tr>
+<td>2. Selos oficiais</td>
+<td>4.3 (snapshot em <code>referencia/</code>)</td>
+</tr>
+<tr>
+<td>3. Instruções oficiais</td>
+<td>4.3 (<code>instrucoes-oficiais.md</code>)</td>
+</tr>
+<tr>
+<td>4. Três LLMs, três provedores</td>
+<td>3, 4.6</td>
+</tr>
+<tr>
+<td>5. Duas avaliações com cada LLM</td>
+<td>5 (analítica) e 6 (por execução, com plano de cada LLM executado na união)</td>
+</tr>
+<tr>
+<td>6. Prompts equivalentes</td>
+<td>Prompts A, B1 e B2, idênticos para todas</td>
+</tr>
+<tr>
+<td>7. Registro de prompts e resultados</td>
+<td>11</td>
+</tr>
+<tr>
+<td>8. Evidências das LLMs</td>
+<td>JSON dos prompts e <code>evidencias.csv</code></td>
+</tr>
+<tr>
+<td>9. Verificação direta das evidências</td>
+<td>7</td>
+</tr>
+<tr>
+<td>10. Tabela comparativa</td>
+<td>9</td>
+</tr>
+<tr>
+<td>11. Concordâncias e divergências</td>
+<td>8 (entre LLMs, entre etapas, causas)</td>
+</tr>
+<tr>
+<td>12. Execução confirma ou contradiz</td>
+<td>9 (tabela de relação A → B)</td>
+</tr>
+<tr>
+<td>13. Fluxograma</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Parâmetros fixos, variados e medidos</td>
+<td>3.1</td>
+</tr>
+<tr>
+<td>14. Conclusão</td>
+<td>8 (critério de consistência definido antes)</td>
+</tr>
+</tbody>
+</table></div>
+</main>
+</div>
+<script>
+(function () {
+  var root = document.documentElement, btn = document.getElementById('theme');
+  function dark() { var t = root.getAttribute('data-theme'); return t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches; }
+  try { var s = localStorage.getItem('theme'); if (s) root.setAttribute('data-theme', s); } catch (e) {}
+  btn.addEventListener('click', function () {
+    var n = dark() ? 'light' : 'dark'; root.setAttribute('data-theme', n);
+    try { localStorage.setItem('theme', n); } catch (e) {}
+  });
+})();
+</script>
+</body>
+</html>

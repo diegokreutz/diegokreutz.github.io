@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Avaliação crítica T7</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff; --fg: #1d1f23; --muted: #5d636e; --line: #e3e5e9;
+  --accent: #1f5fbf; --accent-soft: #eef3fb; --code-bg: #f6f7f9;
+  --warn: #a5410f; --row: #fafbfc;
+  --surface: #fcfcfb; --grid: #e1e0d9; --axis: #c3c2b7;
+  --ok: #0ca30c; --bad: #d03b3b; --ind: #898781;
+  --s1: #2a78d6; --s2: #eb6834; --s7: #4a3aa7;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15171b; --fg: #e6e8eb; --muted: #9aa1ab; --line: #2c3037;
+    --accent: #7fb0ff; --accent-soft: #1c2533; --code-bg: #1d2026;
+    --warn: #f0a070; --row: #191c21;
+    --surface: #1a1a19; --grid: #2c2c2a; --axis: #4a4a46;
+    --ok: #0ca30c; --bad: #e66767; --ind: #898781;
+    --s1: #3987e5; --s2: #d95926; --s7: #9085e9;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15171b; --fg: #e6e8eb; --muted: #9aa1ab; --line: #2c3037;
+  --accent: #7fb0ff; --accent-soft: #1c2533; --code-bg: #1d2026;
+  --warn: #f0a070; --row: #191c21;
+  --surface: #1a1a19; --grid: #2c2c2a; --axis: #4a4a46;
+  --ok: #0ca30c; --bad: #e66767; --ind: #898781;
+  --s1: #3987e5; --s2: #d95926; --s7: #9085e9;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.65 "Source Serif 4", Georgia, serif; }
+.wrap { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 48px; max-width: 1240px; margin: 0 auto; padding: 40px 32px 96px; }
+nav.toc { position: sticky; top: 24px; align-self: start; max-height: calc(100vh - 48px); overflow: auto; font: 14px/1.45 Inter, system-ui, sans-serif; border-right: 1px solid var(--line); padding-right: 20px; }
+nav.toc .kicker { text-transform: uppercase; letter-spacing: .08em; font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+nav.toc a { display: block; color: var(--muted); text-decoration: none; padding: 5px 0; }
+nav.toc a:hover { color: var(--accent); }
+nav.toc .other { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--line); }
+nav.toc .other a { color: var(--accent); font-weight: 500; }
+main { min-width: 0; max-width: 860px; }
+h1 { font-size: 2.1rem; line-height: 1.2; margin: 0 0 18px; font-weight: 700; }
+h2 { font-size: 1.5rem; margin: 56px 0 14px; padding-top: 12px; border-top: 1px solid var(--line); font-weight: 700; }
+h3 { font-size: 1.15rem; margin: 32px 0 8px; font-weight: 600; }
+a { color: var(--accent); }
+p, li { max-width: 76ch; }
+hr { display: none; }
+strong { font-weight: 650; }
+code { font: .86em "JetBrains Mono", ui-monospace, monospace; background: var(--code-bg); padding: .1em .35em; border-radius: 4px; }
+pre { background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; overflow-x: auto; font-size: 14px; line-height: 1.55; }
+pre code { background: none; padding: 0; white-space: pre-wrap; word-break: break-word; }
+pre.mermaid { background: transparent; border: 1px solid var(--line); text-align: center; white-space: pre; }
+.table-wrap { overflow-x: auto; margin: 18px 0 24px; border: 1px solid var(--line); border-radius: 8px; }
+table { border-collapse: collapse; width: 100%; font: 14.5px/1.5 Inter, system-ui, sans-serif; }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+th { font-weight: 600; background: var(--accent-soft); }
+tbody tr:nth-child(even) { background: var(--row); }
+tbody tr:last-child td { border-bottom: none; }
+.lead { font: 15px/1.6 Inter, system-ui, sans-serif; color: var(--muted); margin-bottom: 8px; }
+.theme { position: fixed; top: 14px; right: 16px; font: 13px Inter, sans-serif; background: var(--bg); color: var(--muted); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+
+.fig { margin: 28px 0 32px; }
+.fig-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; padding: 14px 12px; background: var(--surface); }
+.fig svg { display: block; width: 100%; height: auto; }
+.fig figcaption { font: 14px/1.55 Inter, system-ui, sans-serif; color: var(--muted); margin-top: 10px; max-width: 80ch; }
+.fig figcaption strong { color: var(--fg); }
+.fig text { fill: var(--fg); }
+.fig text.muted { fill: var(--muted); }
+.fig text.warn { fill: var(--warn); }
+.fig .rule { stroke: var(--line); stroke-width: 1; }
+.fig .grid { stroke: var(--grid); stroke-width: 1; }
+.fig .axis { stroke: var(--axis); stroke-width: 1.5; }
+.fig .band { fill: none; stroke: var(--warn); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.fig .d-ok { fill: color-mix(in srgb, var(--ok) 18%, var(--surface)); stroke: var(--ok); stroke-width: 1.5; }
+.fig .d-ind { fill: color-mix(in srgb, var(--ind) 14%, var(--surface)); stroke: var(--ind); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.fig .d-bad { fill: color-mix(in srgb, var(--bad) 16%, var(--surface)); stroke: var(--bad); stroke-width: 1.5; }
+.fig .dot-match { fill: var(--ok); stroke: var(--surface); stroke-width: 2; }
+.fig .st-ok { fill: color-mix(in srgb, var(--s1) 26%, var(--surface)); stroke: var(--s1); stroke-width: 1.5; }
+.fig .st-empty { fill: var(--surface); stroke: var(--s1); stroke-width: 1.5; }
+.fig .st-sim { stroke: var(--s2); stroke-width: 1.5; stroke-dasharray: 5 3; }
+.fig .hatch-line { stroke: color-mix(in srgb, var(--s2) 40%, transparent); stroke-width: 2; }
+.fig .bar-s1 { fill: var(--s1); }
+.fig .bar-s1-light { fill: color-mix(in srgb, var(--s1) 35%, var(--surface)); }
+.fig .bar-ref { stroke: var(--ind); stroke-width: 1.5; }
+.fig .flow-exec { stroke: var(--s1); opacity: .85; }
+.fig .flow-p3 { stroke: var(--s2); opacity: .85; }
+.fig .flow-same { stroke: var(--ind); opacity: .45; }
+.fig .nb { fill: var(--surface); stroke: var(--axis); stroke-width: 1.2; }
+.fig .nb-llm { fill: color-mix(in srgb, var(--s1) 14%, var(--surface)); stroke: var(--s1); stroke-width: 1.2; }
+.fig .nb-ok { fill: color-mix(in srgb, var(--ok) 16%, var(--surface)); stroke: var(--ok); stroke-width: 1.2; }
+.fig .nb-sim { fill: color-mix(in srgb, var(--s2) 12%, var(--surface)); stroke: var(--s2); stroke-width: 1.2; stroke-dasharray: 5 3; }
+.fig .nb-key { fill: color-mix(in srgb, var(--s7) 14%, var(--surface)); stroke: var(--s7); stroke-width: 1.4; }
+.fig .nb-warn { fill: color-mix(in srgb, var(--bad) 10%, var(--surface)); stroke: var(--bad); stroke-width: 1.2; }
+.fig .c-conf { fill: color-mix(in srgb, var(--ind) 12%, var(--surface)); stroke: var(--ind); }
+.fig .c-contra { fill: color-mix(in srgb, var(--bad) 16%, var(--surface)); stroke: var(--bad); }
+.fig .c-res { fill: color-mix(in srgb, var(--ok) 16%, var(--surface)); stroke: var(--ok); }
+.fig .c-intro { fill: color-mix(in srgb, var(--s2) 16%, var(--surface)); stroke: var(--s2); }
+.fig .arr { stroke: var(--muted); stroke-width: 1.4; }
+.fig .arr-dash { stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 4 3; }
+.fig .ah { fill: var(--muted); }
+.fig g:hover > rect, .fig g:hover > path { filter: brightness(0.96); }
+
+.params td:first-child { white-space: nowrap; }
+.chip { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; border: 1px solid; }
+.chip.fator { color: var(--s1); border-color: var(--s1); background: color-mix(in srgb, var(--s1) 10%, var(--bg)); }
+.chip.ctrl { color: var(--fg); border-color: var(--axis); background: var(--code-bg); }
+.chip.exec { color: var(--ok); border-color: var(--ok); background: color-mix(in srgb, var(--ok) 10%, var(--bg)); }
+.chip.medida { color: var(--s7); border-color: var(--s7); background: color-mix(in srgb, var(--s7) 10%, var(--bg)); }
+.chip.limiar { color: var(--warn); border-color: var(--warn); background: color-mix(in srgb, var(--warn) 10%, var(--bg)); }
+.params td:nth-child(4) { min-width: 110px; border-left: 1px dashed var(--line); }
+@media (max-width: 900px) {
+  .wrap { grid-template-columns: 1fr; padding: 24px 16px 64px; gap: 8px; }
+  nav.toc { position: static; max-height: none; border-right: none; border-bottom: 1px solid var(--line); padding: 0 0 16px; }
+  h1 { font-size: 1.6rem; }
+  body { font-size: 16px; }
+}
+@media print { nav.toc, .theme { display: none; } .wrap { display: block; } }
+</style>
+</head>
+<body>
+<button class="theme" id="theme" type="button">Tema</button>
+<div class="wrap">
+<nav class="toc">
+<div class="kicker">Sumário</div>
+<a href="#1-síntese-do-veredito">1. Síntese do veredito</a>
+<a href="#2-aderência-à-descrição-da-tarefa">2. Aderência à descrição da tarefa</a>
+<a href="#3-o-que-o-estudo-faz-bem">3. O que o estudo faz bem</a>
+<a href="#4-problemas-no-protocolo-experimental">4. Problemas no protocolo experimental</a>
+<a href="#5-avaliação-dos-resultados-experimento-por-experimento">5. Avaliação dos resultados, experimento por experimento</a>
+<a href="#6-o-que-os-dados-permitem-e-não-permitem-concluir">6. O que os dados permitem e não permitem concluir</a>
+<a href="#7-recomendações-prioritárias">7. Recomendações prioritárias</a>
+<div class="other"><a href="novo_protocolo.html">Novo protocolo &rarr;</a></div>
+</nav>
+<main>
+<h1>Avaliação crítica do protocolo experimental e dos resultados</h1>
+<p><strong>Objeto:</strong> "LLMs reproduzem a avaliação de artefatos científicos?" (slides T7 e relatórios <code>avaliacao-foremost-ng.pdf</code> e <code>avaliacao-mininet-gui.pdf</code>).</p>
+<p><strong>Pergunta de pesquisa implícita:</strong> três LLMs de provedores distintos (OpenAI GPT-5.6 Sol, Anthropic Claude Sonnet 5, Google Gemini 3.1 Pro), seguindo as instruções oficiais dos comitês de artefatos, chegam às mesmas decisões dos comitês para os selos Funcional (F) e Reprodutível (R)?</p>
+<hr />
+<h2 id="1-síntese-do-veredito">1. Síntese do veredito</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Pergunta</th>
+<th>Resposta curta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O protocolo está adequado?</td>
+<td><strong>Parcialmente.</strong> O desenho conceitual (critérios oficiais, prompts padronizados, etapa analítica seguida de etapa pós-execução, registro de evidências) é bom. A execução do protocolo, porém, se desviou dele de forma que compromete a comparação: a etapa "execução" só existiu para uma das três LLMs, e as condições de entrada, de interface e de ambiente não foram equivalentes.</td>
+</tr>
+<tr>
+<td>Os resultados são conclusivos?</td>
+<td><strong>Não.</strong> A amostra é de 12 decisões (2 artefatos × 3 LLMs × 2 selos), sem repetições, sem controles negativos, e o principal fator explicativo (ter ou não executado o artefato) está totalmente confundido com o provedor. Os resultados são exploratórios e servem como estudo-piloto.</td>
+</tr>
+<tr>
+<td>A conclusão dos slides se sustenta?</td>
+<td><strong>Em parte.</strong> "As LLMs foram úteis para localizar evidências e lacunas" é bem sustentada pelos registros. "Não reproduziram de forma consistente a avaliação oficial" é verdadeira como descrição, mas não pode ser atribuída à capacidade das LLMs: a causa dominante foi a ausência de execução e de insumos (por exemplo, <code>evidence2.dd</code>), não o julgamento dos modelos. "A execução aumentou o rigor, não a concordância" se apoia em uma única execução real (n = 1) e é contradita pelos próprios números (ver seção 5.3).</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="2-aderência-à-descrição-da-tarefa">2. Aderência à descrição da tarefa</h2>
+<p>A tarefa pede: no mínimo 3 LLMs de 3 provedores, um artefato do SBSeg ou SBRC, instruções oficiais da edição, <strong>duas avaliações com cada LLM</strong> (analítica e por execução), prompts equivalentes, registro de prompts, resultados e evidências, verificação direta das evidências, tabela comparativa, análise de concordâncias e divergências, confirmação ou contradição da análise pela execução, fluxograma e conclusão.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Item da tarefa</th>
+<th>Situação</th>
+<th>Comentário</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Escolher artefato</td>
+<td>Atendido (e ampliado)</td>
+<td>Dois artefatos, um de cada evento. Bom para generalização, mas dobrou o custo e contribuiu para execuções incompletas.</td>
+</tr>
+<tr>
+<td>2. Selos oficiais</td>
+<td>Atendido</td>
+<td>Transcritos; falta snapshot datado da página de resultados.</td>
+</tr>
+<tr>
+<td>3. Instruções oficiais</td>
+<td>Atendido</td>
+<td>Transcritas e salvas.</td>
+</tr>
+<tr>
+<td>4. Três LLMs, três provedores</td>
+<td>Atendido</td>
+<td>Interfaces muito diferentes entre si (ver 4.4).</td>
+</tr>
+<tr>
+<td><strong>5. Duas avaliações com cada LLM</strong></td>
+<td><strong>Não atendido</strong></td>
+<td>A avaliação por execução só ocorreu com a LLM 1. Nas LLMs 2 e 3 foi substituída por simulação (Prompt 3), que a tarefa não prevê. É o desvio mais grave, porque inviabiliza os itens 10 a 12 e o próprio objetivo ("verificar se a análise é consistente com os resultados obtidos por meio da execução prática").</td>
+</tr>
+<tr>
+<td>6. Prompts equivalentes</td>
+<td>Parcial</td>
+<td>Prompt 1 do Mininet-GUI omite o artigo; ficha da LLM 2 do Mininet-GUI difere das demais; a LLM 1 do Foremost-NG rodou em conversa-piloto não cega.</td>
+</tr>
+<tr>
+<td>7. Registro de prompts e resultados</td>
+<td>Parcial</td>
+<td>Registro da LLM 3 do Foremost-NG não conferido; caminhos divergentes entre seções.</td>
+</tr>
+<tr>
+<td>8. Evidências das LLMs</td>
+<td>Atendido</td>
+<td>Seção 8 dos relatórios.</td>
+</tr>
+<tr>
+<td>9. Verificação direta das evidências</td>
+<td>Parcial</td>
+<td>Feita de forma qualitativa, sem contagem de evidências corretas, inexistentes ou mal interpretadas.</td>
+</tr>
+<tr>
+<td>10. Tabela comparativa</td>
+<td>Atendido na forma, comprometido no conteúdo</td>
+<td>A coluna "Após execução" mistura execução real e simulação.</td>
+</tr>
+<tr>
+<td>11. Concordâncias e divergências</td>
+<td>Parcial</td>
+<td>As divergências entre provedores são atribuídas ao modelo, quando decorrem da diferença de tratamento.</td>
+</tr>
+<tr>
+<td>12. Execução confirma ou contradiz</td>
+<td>Não atendido para 2 das 3 LLMs</td>
+<td>Sem execução, não há o que confirmar ou contradizer; a seção 11 dos relatórios registra "Parcial" ou "Confirma" com base em simulação.</td>
+</tr>
+<tr>
+<td>13. Fluxograma</td>
+<td>Atendido</td>
+<td>O fluxograma registra o desvio, o que é correto.</td>
+</tr>
+<tr>
+<td>14. Conclusão</td>
+<td>Atendido na forma</td>
+<td>A conclusão é cautelosa, mas os slides generalizam mais do que os dados permitem.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Observação importante: a tarefa diz "executar ou utilizar o artefato, <strong>quando possível</strong>". No Mininet-GUI, a execução não era impossível; era impossível <strong>no ambiente escolhido</strong> (Windows sem virtualização). Os autores fornecem uma VM. O "quando possível" não cobre limitações do ambiente do aluno que poderiam ter sido contornadas (VM local, máquina Linux do laboratório, instância em nuvem).</p>
+<p>Outra observação: a tarefa diz que a execução deve seguir "as instruções e os procedimentos fornecidos pelos autores". O uso do DFTT #11 no Foremost-NG, escolhido pelo agente, é um procedimento externo aos autores. É defensável como teste mínimo, mas deve ser declarado como desvio.</p>
+<hr />
+<h2 id="3-o-que-o-estudo-faz-bem">3. O que o estudo faz bem</h2>
+<ol>
+<li><strong>Ancoragem nos critérios oficiais.</strong> As instruções de revisão de cada edição (SBSeg 2025 e SBRC 2025) foram transcritas integralmente no prompt e salvas em arquivo, o que protege contra mudanças nas páginas.</li>
+<li><strong>Prompts padronizados e versionados.</strong> Os três prompts (analítico, plano de execução e simulação) estão publicados com o texto exato, e os registros das conversas estão em <code>github.com/R-ZW/leas-tarefa-7/tree/main/runs/</code>.</li>
+<li><strong>Separação entre análise documental e evidência de execução.</strong> O Prompt 1 proíbe alegar execução sem evidência, e o Prompt 3 proíbe inventar saídas. Isso reduz alucinação de resultados, um risco central nesse tipo de estudo.</li>
+<li><strong>Padrão mínimo de evidência.</strong> Exigir arquivo, seção, comando, diretório e saída para cada afirmação torna as decisões auditáveis.</li>
+<li><strong>Escala de decisão com três níveis</strong> (Atribuir, Não atribuir, Indeterminado) e pedido de nível de confiança: permite distinguir "não há evidência" de "há evidência contrária".</li>
+<li><strong>Transparência sobre desvios.</strong> Os relatórios registram explicitamente que só a LLM 1 executou algo e que as LLMs 2 e 3 simularam. Isso é honesto e permite esta crítica.</li>
+<li><strong>Escolha de dois artefatos de naturezas diferentes</strong> (ferramenta de linha de comando em C versus aplicação web com dependência de infraestrutura de rede emulada), o que ajuda a mostrar como a infraestrutura afeta a avaliação.</li>
+</ol>
+<hr />
+<h2 id="4-problemas-no-protocolo-experimental">4. Problemas no protocolo experimental</h2>
+<h3>4.1 Confusão entre o fator "LLM" e o fator "execução" (problema principal)</h3>
+<p>O protocolo previa quatro etapas por LLM: análise, plano, <strong>execução prática pelo aluno</strong> seguindo o plano daquela LLM, e fechamento com a mesma LLM recebendo o registro factual. Na prática:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Artefato</th>
+<th>LLM 1 (OpenAI)</th>
+<th>LLM 2 (Anthropic)</th>
+<th>LLM 3 (Google)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Foremost-NG</td>
+<td>Execução real feita pelo próprio agente (Codex) em Windows/MSYS2</td>
+<td>Simulação (Prompt 3)</td>
+<td>Simulação (Prompt 3)</td>
+</tr>
+<tr>
+<td>Mininet-GUI</td>
+<td>Validação parcial real (<code>npm ci</code>, <code>compileall</code>); GUI e Pingall não executados</td>
+<td>Simulação</td>
+<td>Simulação</td>
+</tr>
+</tbody>
+</table></div>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 870 398" role="img" aria-label="Etapas planejadas versus realizadas por LLM e artefato" font-family="Inter, system-ui, sans-serif" style="min-width:640px"><defs><pattern id="hatchA" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" class="hatch-line"/></pattern></defs><text x="270.0" y="50" font-size="13" text-anchor="middle" font-weight="600" class="muted">1. Analítica</text><text x="440.0" y="50" font-size="13" text-anchor="middle" font-weight="600" class="muted">2. Plano de execução</text><text x="610.0" y="50" font-size="13" text-anchor="middle" font-weight="600" class="muted">3. Execução prática</text><text x="780.0" y="50" font-size="13" text-anchor="middle" font-weight="600" class="muted">4. Fechamento</text><rect x="525" y="30" width="340" height="324" rx="8" class="band"/><text x="695.0" y="22" font-size="12" text-anchor="middle" font-weight="600" class="warn">Exigido pela tarefa (item 5) para cada LLM</text><text x="10" y="87" font-size="13" text-anchor="start" font-weight="700" class="ink">Foremost-NG</text><text x="110" y="87" font-size="13" text-anchor="start" font-weight="400" class="ink">OpenAI</text><g><title>Foremost-NG, OpenAI, 1. Analítica: Realizado</title><rect x="190" y="70" width="160" height="34" rx="5" class="st-ok"/><text x="270.0" y="92" font-size="12" text-anchor="middle" font-weight="600" class="ink">Realizado</text></g><g><title>Foremost-NG, OpenAI, 2. Plano de execução: Realizado</title><rect x="360" y="70" width="160" height="34" rx="5" class="st-ok"/><text x="440.0" y="92" font-size="12" text-anchor="middle" font-weight="600" class="ink">Realizado</text></g><g><title>Foremost-NG, OpenAI, 3. Execução prática: Realizado (pelo agente, em Windows)</title><rect x="530" y="70" width="160" height="34" rx="5" class="st-ok"/><text x="610.0" y="85" font-size="12" text-anchor="middle" font-weight="600" class="ink">Realizado</text><text x="610.0" y="99" font-size="10.5" text-anchor="middle" font-weight="500" class="muted">pelo agente, em Windows</text></g><g><title>Foremost-NG, OpenAI, 4. Fechamento: Realizado</title><rect x="700" y="70" width="160" height="34" rx="5" class="st-ok"/><text x="780.0" y="92" font-size="12" text-anchor="middle" font-weight="600" class="ink">Realizado</text></g><text x="110" y="133" font-size="13" text-anchor="start" font-weight="400" class="ink">Anthropic</text><g><title>Foremost-NG, Anthropic, 1. Analítica: Realizado</title><rect x="190" y="116" width="160" height="34" rx="5" class="st-ok"/><text x="270.0" y="138" font-size="12" text-anchor="middle" font-weight="600" class="ink">Realizado</text></g><g><title>Foremost-NG, Anthropic, 2. Plano de execução: Realizado</title><rect x="360" y="116" width="160" height="34" rx="5" class="st-ok"/><text x="440.0" y="138" font-size="12" text-anchor="middle" font-weight="600" class="ink">Realizado</text></g><g><title>Foremost-NG, Anthropic, 3. Execução prática: Simulado (Prompt 3)</title><rect x="530" y="116" width="160" height="34" rx="5" fill="url(#hatchA)" class="st-sim"/><text x="610.0" y="131" font-size="12" text-anchor="middle" font-weight="600" class="ink">Simulado</text><text x="610.0" y="145" font-size="10.5" text-anchor="middle" font-weight="500" class="muted">Prompt 3</text></g><g><title>Foremost-NG, Anthropic, 4. Fechamento: Simulado (sobre a simulação)</title><rect x="700" y="116" width="160" height="34" rx="5" fill="url(#hatchA)" class="st-sim"/><text x="780.0" y="131" font-size="12" text-anchor="middle" font-weight="600" class="ink">Simulado</text><text x="780.0" y="145" font-size="10.5" text-anchor="middle" font-weight="500" class="muted">sobre a simulação</text></g><text x="110" y="179" font-size="13" text-anchor="start" font-weight="400" class="ink">Google</text><g><title>Foremost-NG, Google, 1. Analítica: Realizado</title><rect x="190" y="162" width="160" height="34" rx="5" class="st-ok"/><text x="270.0" y="184" font-size="12" text-anchor="middle" font-weight="600" class="ink">Realizado</text></g><g><title>Foremost-NG, Google, 2. Plano de execução: Realizado</title><rect x="360" y="162" width="160" height="34" rx="5" class="st-ok"/><text x="440.0" y="184" font-size="12" text-anchor="middle" font-weight="600" class="ink">Realizado</text></g><g><title>Foremost-NG, Google, 3. Execução prática: Simulado (Prompt 3)</title><rect x="530" y="162" width="160" height="34" rx="5" fill="url(#hatchA)" class="st-sim"/><text x="610.0" y="177" font-size="12" text-anchor="middle" font-weight="600" class="ink">Simulado</text><text x="610.0" y="191" font-size="10.5" text-anchor="middle" font-weight="500" class="muted">Prompt 3</text></g><g><title>Foremost-NG, Google, 4. Fechamento: Simulado (sobre a simulação)</title><rect x="700" y="162" width="160" height="34" rx="5" fill="url(#hatchA)" class="st-sim"/><text x="780.0" y="177" font-size="12" text-anchor="middle" font-weight="600" class="ink">Simulado</text><text x="780.0" y="191" font-size="10.5" text-anchor="middle" font-weight="500" class="muted">sobre a simulação</text></g><text x="10" y="225" font-size="13" text-anchor="start" font-weight="700" class="ink">Mininet-GUI</text><text x="110" y="225" font-size="13" text-anchor="start" font-weight="400" class="ink">OpenAI</text><line x1="10" x2="870" y1="202" y2="202" class="rule"/><g><title>Mininet-GUI, OpenAI, 1. Analítica: Realizado</title><rect x="190" y="208" width="160" height="34" rx="5" class="st-ok"/><text x="270.0" y="230" font-size="12" text-anchor="middle" font-weight="600" class="ink">Realizado</text></g><g><title>Mininet-GUI, OpenAI, 2. Plano de execução: Realizado</title><rect x="360" y="208" width="160" height="34" rx="5" class="st-ok"/><text x="440.0" y="230" font-size="12" text-anchor="middle" font-weight="600" class="ink">Realizado</text></g><g><title>Mininet-GUI, OpenAI, 3. Execução prática: Parcial (npm ci, compileall)</title><rect x="530" y="208" width="160" height="34" rx="5" class="st-empty"/><rect x="530" y="208" width="80.0" height="34" rx="5" class="st-ok"/><text x="610.0" y="223" font-size="12" text-anchor="middle" font-weight="600" class="ink">Parcial</text><text x="610.0" y="237" font-size="10.5" text-anchor="middle" font-weight="500" class="muted">npm ci, compileall</text></g><g><title>Mininet-GUI, OpenAI, 4. Fechamento: Realizado</title><rect x="700" y="208" width="160" height="34" rx="5" class="st-ok"/><text x="780.0" y="230" font-size="12" text-anchor="middle" font-weight="600" class="ink">Realizado</text></g><text x="110" y="271" font-size="13" text-anchor="start" font-weight="400" class="ink">Anthropic</text><g><title>Mininet-GUI, Anthropic, 1. Analítica: Realizado</title><rect x="190" y="254" width="160" height="34" rx="5" class="st-ok"/><text x="270.0" y="276" font-size="12" text-anchor="middle" font-weight="600" class="ink">Realizado</text></g><g><title>Mininet-GUI, Anthropic, 2. Plano de execução: Realizado</title><rect x="360" y="254" width="160" height="34" rx="5" class="st-ok"/><text x="440.0" y="276" font-size="12" text-anchor="middle" font-weight="600" class="ink">Realizado</text></g><g><title>Mininet-GUI, Anthropic, 3. Execução prática: Simulado (Prompt 3)</title><rect x="530" y="254" width="160" height="34" rx="5" fill="url(#hatchA)" class="st-sim"/><text x="610.0" y="269" font-size="12" text-anchor="middle" font-weight="600" class="ink">Simulado</text><text x="610.0" y="283" font-size="10.5" text-anchor="middle" font-weight="500" class="muted">Prompt 3</text></g><g><title>Mininet-GUI, Anthropic, 4. Fechamento: Simulado (sobre a simulação)</title><rect x="700" y="254" width="160" height="34" rx="5" fill="url(#hatchA)" class="st-sim"/><text x="780.0" y="269" font-size="12" text-anchor="middle" font-weight="600" class="ink">Simulado</text><text x="780.0" y="283" font-size="10.5" text-anchor="middle" font-weight="500" class="muted">sobre a simulação</text></g><text x="110" y="317" font-size="13" text-anchor="start" font-weight="400" class="ink">Google</text><g><title>Mininet-GUI, Google, 1. Analítica: Realizado</title><rect x="190" y="300" width="160" height="34" rx="5" class="st-ok"/><text x="270.0" y="322" font-size="12" text-anchor="middle" font-weight="600" class="ink">Realizado</text></g><g><title>Mininet-GUI, Google, 2. Plano de execução: Realizado</title><rect x="360" y="300" width="160" height="34" rx="5" class="st-ok"/><text x="440.0" y="322" font-size="12" text-anchor="middle" font-weight="600" class="ink">Realizado</text></g><g><title>Mininet-GUI, Google, 3. Execução prática: Simulado (Prompt 3)</title><rect x="530" y="300" width="160" height="34" rx="5" fill="url(#hatchA)" class="st-sim"/><text x="610.0" y="315" font-size="12" text-anchor="middle" font-weight="600" class="ink">Simulado</text><text x="610.0" y="329" font-size="10.5" text-anchor="middle" font-weight="500" class="muted">Prompt 3</text></g><g><title>Mininet-GUI, Google, 4. Fechamento: Simulado (sobre a simulação)</title><rect x="700" y="300" width="160" height="34" rx="5" fill="url(#hatchA)" class="st-sim"/><text x="780.0" y="315" font-size="12" text-anchor="middle" font-weight="600" class="ink">Simulado</text><text x="780.0" y="329" font-size="10.5" text-anchor="middle" font-weight="500" class="muted">sobre a simulação</text></g><rect x="190" y="368" width="22" height="14" rx="3" class="st-ok"/><text x="220" y="379.5" font-size="12" text-anchor="start" font-weight="400" class="muted">Realizado</text><rect x="380" y="368" width="22" height="14" rx="3" class="st-empty"/><rect x="380" y="368" width="11" height="14" rx="3" class="st-ok"/><text x="410" y="379.5" font-size="12" text-anchor="start" font-weight="400" class="muted">Parcial</text><rect x="570" y="368" width="22" height="14" rx="3" class="st-sim" fill="url(#hatchA)"/><text x="600" y="379.5" font-size="12" text-anchor="start" font-weight="400" class="muted">Simulado (sem execução)</text></svg></div><figcaption><strong>Figura 1.</strong> Etapas planejadas versus realizadas. A tarefa exige a avaliação por execução com cada LLM; ela só ocorreu para a OpenAI. Nas demais, a execução e o fechamento foram substituídos por simulação, de modo que o provedor fica totalmente confundido com a condição experimental.</figcaption></figure>
+
+<p>Consequências:</p>
+<ul>
+<li>A única diferença de resultado relevante (OpenAI atribuiu F no Foremost-NG) coincide exatamente com a única condição em que houve execução. Não é possível saber se o resultado se deve ao modelo ou à execução. Qualquer frase do tipo "OpenAI foi mais conclusivo" ou "Claude adotou cautela" atribui ao provedor um efeito que é do tratamento.</li>
+<li>A seção 13 de ambos os relatórios compara "diferenças entre provedores", mas os provedores não receberam o mesmo tratamento. Essa comparação não é válida.</li>
+<li>A etapa "Fechamento: decisão após execução" nunca ocorreu para as LLMs 2 e 3; o que se registrou como "pós-execução" foi a conclusão de uma simulação. A coluna "Após execução" das tabelas mistura, portanto, duas coisas diferentes.</li>
+</ul>
+<h3>4.2 O Prompt 3 induz o resultado "Indeterminado"</h3>
+<p>O Prompt 3 instrui: <em>"Quando a decisão depender da execução real, marque-a como Indeterminado"</em>. Como F e R, por definição oficial, <strong>sempre</strong> dependem de execução, esse prompt praticamente obriga a resposta "Indeterminado" (ou "Não atribuir", quando já faltava algo documental). Isso explica:</p>
+<ul>
+<li>Gemini/Mininet-GUI: Atribuir/Atribuir na análise → Indeterminado/Indeterminado na "pós-execução". Os relatórios interpretam isso como "a simulação reduziu as decisões positivas", mas o recuo foi imposto pela instrução, não por evidência nova.</li>
+<li>Claude/Foremost-NG e Claude/Mininet-GUI: F permanece Indeterminado, como o prompt exige.</li>
+</ul>
+<p>Ou seja, parte da "mudança" entre etapas é artefato do instrumento de medida. Esse prompt não deveria ser usado como substituto da etapa de execução.</p>
+<h3>4.3 Entradas não equivalentes entre artefatos e entre LLMs</h3>
+<ul>
+<li><strong>Artigo ausente no Mininet-GUI.</strong> O Prompt 1 do Foremost-NG fornece o DOI do artigo; o do Mininet-GUI fornece apenas o repositório, embora as próprias instruções do SBRC 2025 digam "(i) leia o artigo; e (ii) defina as principais contribuições". Mesmo assim, a ficha do Claude cita "artigo, seção de contribuições" e "seis contribuições". Não há como saber se o artigo foi obtido por navegação, inferido do README ou alucinado. Para o selo R, que depende de identificar as "principais reivindicações", essa omissão é crítica.</li>
+<li><strong>Ficha da LLM 2 no Mininet-GUI</strong> diz "forneça apenas o mesmo artefato e as mesmas instruções", sem o artigo; as fichas das LLMs 1 e 3 citam "o mesmo artigo". O template variou entre LLMs.</li>
+<li><strong>Modo de acesso ao contexto não controlado.</strong> "Utilize o repositório do GitHub mencionado acima e/ou passado como parâmetro ou anexo" permite que cada LLM leia uma parte diferente do repositório (o Claude admite que "parte de docs/ e código não foi examinada"). Não há registro de qual material exato cada modelo efetivamente leu.</li>
+</ul>
+<h3>4.4 Interfaces e capacidades heterogêneas</h3>
+<ul>
+<li>OpenAI rodou no <strong>Codex</strong> (agente com terminal e capacidade de executar comandos), Gemini no <strong>Antigravity</strong> (IDE agêntica) e Claude no <strong>aplicativo desktop</strong> (chat). São ferramentas com capacidades de leitura de arquivos, navegação e execução muito diferentes. O estudo compara, na prática, "produto + modelo", não "modelo".</li>
+<li>O nível de raciocínio foi fixado em "médio" para OpenAI e Anthropic, mas não está registrado para o Gemini.</li>
+<li>A ficha da LLM 1 no Foremost-NG registra "conversa atual no Codex, execução-piloto <strong>não cega</strong>". Se o mesmo contexto foi usado para preparar o estudo, o modelo pode ter recebido informação que os outros não receberam (inclusive sobre selos oficiais ou expectativas). Isso viola a própria regra da ficha ("forneça apenas o mesmo artigo, o mesmo artefato e as mesmas instruções").</li>
+</ul>
+<h3>4.5 Ambiente de execução inadequado ao artefato</h3>
+<ul>
+<li><strong>Mininet-GUI</strong> depende de Linux, Mininet e Open vSwitch; os autores fornecem VM. A validação foi feita em Windows sem Docker, VirtualBox ou Mininet. As instruções oficiais exigem um ambiente "que satisfaça os requisitos mínimos do ambiente de execução esperado para o artefato". O teste central (GUI, Pingall, WebShell) era impossível nesse ambiente, e <code>python -m compileall</code> verifica apenas sintaxe, não funcionamento. Os slides apresentam "backend compilou; 143 pacotes instalados" como validação direta, o que superestima a evidência.</li>
+<li><strong>Foremost-NG</strong> foi executado em Windows com MSYS2, não no Ubuntu sugerido. A saída ELF truncada (1.956 de 2.648 bytes) pode ser defeito do artefato <strong>ou</strong> efeito do ambiente (por exemplo, tratamento de modo texto/binário ou diferenças de <code>libc</code> no MSYS2). Sem repetir em Linux, essa observação não pode ser usada como evidência sobre o artefato.</li>
+</ul>
+<h3>4.6 Versão do artefato não alinhada à avaliação oficial</h3>
+<p>O protocolo pede "manter exatamente a mesma versão em todas as execuções", e o Foremost-NG registra o commit <code>bb812a22…</code>. Mas não se verificou se esse commit é o mesmo avaliado pelo comitê em 2025. Repositórios mudam depois da avaliação (arquivos de exemplo removidos, README reescrito, dependências atualizadas). Para Mininet-GUI nem o commit foi registrado. Se a versão difere, a comparação com o selo oficial perde validade.</p>
+<h3>4.7 Assimetria entre o processo oficial e o processo com LLM</h3>
+<p>A avaliação oficial do SBSeg 2025 e do SBRC 2025 ocorre em duas rodadas, com <strong>rebuttal</strong> dos autores, discussão entre revisores e possibilidade de os autores fornecerem material adicional (por exemplo, o arquivo <code>evidence2.dd</code> necessário para a Figura 2 do Foremost-NG pode ter sido enviado durante o processo). As LLMs tiveram uma única rodada, sem interação com autores. A divergência em R pode refletir essa diferença de processo e não um erro de julgamento. O estudo não investigou se o material faltante esteve disponível para os revisores oficiais.</p>
+<h3>4.8 Variável de referência sem variância (ausência de controles negativos)</h3>
+<p>Os dois artefatos receberam <strong>todos os quatro selos</strong> oficialmente. Logo:</p>
+<ul>
+<li>Um "avaliador" trivial que sempre responde "Atribuir" teria 12/12 de concordância; um que sempre responde "Não atribuir" teria 0/12. A métrica de concordância não distingue um bom avaliador de um avaliador enviesado para o positivo.</li>
+<li>Não é possível medir especificidade (capacidade de negar corretamente um selo) nem calcular estatísticas de concordância corrigidas pelo acaso (kappa de Cohen ou Fleiss), porque a referência é constante.</li>
+<li>É preciso incluir artefatos com F e/ou R <strong>negados</strong> oficialmente.</li>
+</ul>
+<h3>4.9 Ausência de repetição e de medida de variabilidade</h3>
+<p>LLMs são não determinísticas. Cada célula da tabela é uma única amostra. Não se sabe se o Gemini atribuiria F e R ao Mininet-GUI de novo, nem se o Claude manteria "Indeterminado". Sem repetição (por exemplo, 3 a 5 execuções por condição), não há como separar diferença entre modelos de ruído de amostragem.</p>
+<h3>4.10 Definição de "principais reivindicações" deixada a cargo de cada LLM</h3>
+<p>No Mininet-GUI, OpenAI e Claude negaram R porque o README cobre 2 das 6 contribuições do artigo; o Gemini aceitou as 2 reivindicações documentadas como suficientes. As instruções oficiais permitem explicitamente que os autores escolham "as principais reivindicações" quando reproduzir tudo é inviável. A divergência é, portanto, de interpretação do critério, e o protocolo não fixou essa interpretação. Uma lista de reivindicações definida previamente por humanos e fornecida a todas as LLMs eliminaria essa fonte de variância.</p>
+<h3>4.11 Métrica de comparação pobre</h3>
+<p>"Correspondência final exata" trata "Indeterminado" como erro igual a "Não atribuir". Isso mistura duas falhas diferentes: abstenção (o modelo reconhece que falta evidência) e erro (o modelo nega algo que deveria atribuir). Seria mais informativo reportar separadamente cobertura (proporção de decisões não indeterminadas) e acurácia entre as decisões tomadas, além da qualidade das evidências citadas.</p>
+<h3>4.12 Verificação das evidências citadas não sistemática</h3>
+<p>O protocolo prevê "verificar diretamente as evidências no artefato", e a seção 8 lista algumas. Mas não há medida de quantas evidências citadas por cada LLM eram corretas, inexistentes ou mal interpretadas (taxa de alucinação de evidência), que é justamente um dos resultados mais úteis e mais fáceis de medir nesse tipo de estudo.</p>
+<h3>4.13 Teste mínimo improvisado</h3>
+<p>No Foremost-NG, a LLM 1 escolheu o DFTT #11 como entrada, algo não documentado pelos autores. O Prompt 2 pede "não improvisar correções não documentadas". O uso de um benchmark público é razoável e provavelmente seria aceito por um revisor humano, mas é um desvio que deveria ser declarado como tal e aplicado igualmente a todas as LLMs. Além disso, "14 arquivos recuperados" não foi comparado com o gabarito do DFTT #11 (quantos arquivos deveriam ser recuperados); apenas a contagem foi relatada.</p>
+<hr />
+<h2 id="5-avaliação-dos-resultados-experimento-por-experimento">5. Avaliação dos resultados, experimento por experimento</h2>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 860 356" role="img" aria-label="Matriz de decisões F e R por LLM, etapa e artefato" font-family="Inter, system-ui, sans-serif" style="min-width:640px"><text x="299.0" y="28" font-size="13" text-anchor="middle" font-weight="700" class="ink">Oficial</text><line x1="200" x2="398" y1="36" y2="36" class="rule"/><text x="248.0" y="58" font-size="12" text-anchor="middle" font-weight="600" class="muted">F</text><text x="350.0" y="58" font-size="12" text-anchor="middle" font-weight="600" class="muted">R</text><text x="521.0" y="28" font-size="13" text-anchor="middle" font-weight="700" class="ink">Analítica</text><line x1="422" x2="620" y1="36" y2="36" class="rule"/><text x="470.0" y="58" font-size="12" text-anchor="middle" font-weight="600" class="muted">F</text><text x="572.0" y="58" font-size="12" text-anchor="middle" font-weight="600" class="muted">R</text><text x="743.0" y="28" font-size="13" text-anchor="middle" font-weight="700" class="ink">Final</text><line x1="644" x2="842" y1="36" y2="36" class="rule"/><text x="692.0" y="58" font-size="12" text-anchor="middle" font-weight="600" class="muted">F</text><text x="794.0" y="58" font-size="12" text-anchor="middle" font-weight="600" class="muted">R</text><text x="10" y="99" font-size="13" text-anchor="start" font-weight="700" class="ink">Foremost-NG</text><text x="112" y="99" font-size="13" text-anchor="start" font-weight="400" class="ink">OpenAI</text><g><title>Foremost-NG, OpenAI, Oficial F: Atribuir</title><rect x="200" y="78" width="96" height="32" rx="5" class="d-ok"/><text x="248.0" y="98.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✓ Atribuir</text></g><g><title>Foremost-NG, OpenAI, Oficial R: Atribuir</title><rect x="302" y="78" width="96" height="32" rx="5" class="d-ok"/><text x="350.0" y="98.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✓ Atribuir</text></g><g><title>Foremost-NG, OpenAI, Analítica F: Indet., diverge do oficial</title><rect x="422" y="78" width="96" height="32" rx="5" class="d-ind"/><text x="470.0" y="98.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">? Indet.</text></g><g><title>Foremost-NG, OpenAI, Analítica R: Não, diverge do oficial</title><rect x="524" y="78" width="96" height="32" rx="5" class="d-bad"/><text x="572.0" y="98.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✗ Não</text></g><g><title>Foremost-NG, OpenAI, Final F: Atribuir, coincide com o oficial</title><rect x="644" y="78" width="96" height="32" rx="5" class="d-ok"/><text x="692.0" y="98.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✓ Atribuir</text></g><circle cx="732" cy="86" r="4" class="dot-match"/><g><title>Foremost-NG, OpenAI, Final R: Não, diverge do oficial</title><rect x="746" y="78" width="96" height="32" rx="5" class="d-bad"/><text x="794.0" y="98.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✗ Não</text></g><text x="112" y="139" font-size="13" text-anchor="start" font-weight="400" class="ink">Anthropic</text><g><title>Foremost-NG, Anthropic, Oficial F: Atribuir</title><rect x="200" y="118" width="96" height="32" rx="5" class="d-ok"/><text x="248.0" y="138.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✓ Atribuir</text></g><g><title>Foremost-NG, Anthropic, Oficial R: Atribuir</title><rect x="302" y="118" width="96" height="32" rx="5" class="d-ok"/><text x="350.0" y="138.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✓ Atribuir</text></g><g><title>Foremost-NG, Anthropic, Analítica F: Indet., diverge do oficial</title><rect x="422" y="118" width="96" height="32" rx="5" class="d-ind"/><text x="470.0" y="138.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">? Indet.</text></g><g><title>Foremost-NG, Anthropic, Analítica R: Não, diverge do oficial</title><rect x="524" y="118" width="96" height="32" rx="5" class="d-bad"/><text x="572.0" y="138.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✗ Não</text></g><g><title>Foremost-NG, Anthropic, Final F: Indet., diverge do oficial</title><rect x="644" y="118" width="96" height="32" rx="5" class="d-ind"/><text x="692.0" y="138.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">? Indet.</text></g><g><title>Foremost-NG, Anthropic, Final R: Não, diverge do oficial</title><rect x="746" y="118" width="96" height="32" rx="5" class="d-bad"/><text x="794.0" y="138.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✗ Não</text></g><text x="112" y="179" font-size="13" text-anchor="start" font-weight="400" class="ink">Google</text><g><title>Foremost-NG, Google, Oficial F: Atribuir</title><rect x="200" y="158" width="96" height="32" rx="5" class="d-ok"/><text x="248.0" y="178.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✓ Atribuir</text></g><g><title>Foremost-NG, Google, Oficial R: Atribuir</title><rect x="302" y="158" width="96" height="32" rx="5" class="d-ok"/><text x="350.0" y="178.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✓ Atribuir</text></g><g><title>Foremost-NG, Google, Analítica F: Não, diverge do oficial</title><rect x="422" y="158" width="96" height="32" rx="5" class="d-bad"/><text x="470.0" y="178.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✗ Não</text></g><g><title>Foremost-NG, Google, Analítica R: Não, diverge do oficial</title><rect x="524" y="158" width="96" height="32" rx="5" class="d-bad"/><text x="572.0" y="178.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✗ Não</text></g><g><title>Foremost-NG, Google, Final F: Não, diverge do oficial</title><rect x="644" y="158" width="96" height="32" rx="5" class="d-bad"/><text x="692.0" y="178.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✗ Não</text></g><g><title>Foremost-NG, Google, Final R: Não, diverge do oficial</title><rect x="746" y="158" width="96" height="32" rx="5" class="d-bad"/><text x="794.0" y="178.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✗ Não</text></g><text x="10" y="219" font-size="13" text-anchor="start" font-weight="700" class="ink">Mininet-GUI</text><line x1="10" x2="848" y1="194" y2="194" class="rule"/><text x="112" y="219" font-size="13" text-anchor="start" font-weight="400" class="ink">OpenAI</text><g><title>Mininet-GUI, OpenAI, Oficial F: Atribuir</title><rect x="200" y="198" width="96" height="32" rx="5" class="d-ok"/><text x="248.0" y="218.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✓ Atribuir</text></g><g><title>Mininet-GUI, OpenAI, Oficial R: Atribuir</title><rect x="302" y="198" width="96" height="32" rx="5" class="d-ok"/><text x="350.0" y="218.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✓ Atribuir</text></g><g><title>Mininet-GUI, OpenAI, Analítica F: Indet., diverge do oficial</title><rect x="422" y="198" width="96" height="32" rx="5" class="d-ind"/><text x="470.0" y="218.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">? Indet.</text></g><g><title>Mininet-GUI, OpenAI, Analítica R: Não, diverge do oficial</title><rect x="524" y="198" width="96" height="32" rx="5" class="d-bad"/><text x="572.0" y="218.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✗ Não</text></g><g><title>Mininet-GUI, OpenAI, Final F: Indet., diverge do oficial</title><rect x="644" y="198" width="96" height="32" rx="5" class="d-ind"/><text x="692.0" y="218.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">? Indet.</text></g><g><title>Mininet-GUI, OpenAI, Final R: Não, diverge do oficial</title><rect x="746" y="198" width="96" height="32" rx="5" class="d-bad"/><text x="794.0" y="218.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✗ Não</text></g><text x="112" y="259" font-size="13" text-anchor="start" font-weight="400" class="ink">Anthropic</text><g><title>Mininet-GUI, Anthropic, Oficial F: Atribuir</title><rect x="200" y="238" width="96" height="32" rx="5" class="d-ok"/><text x="248.0" y="258.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✓ Atribuir</text></g><g><title>Mininet-GUI, Anthropic, Oficial R: Atribuir</title><rect x="302" y="238" width="96" height="32" rx="5" class="d-ok"/><text x="350.0" y="258.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✓ Atribuir</text></g><g><title>Mininet-GUI, Anthropic, Analítica F: Indet., diverge do oficial</title><rect x="422" y="238" width="96" height="32" rx="5" class="d-ind"/><text x="470.0" y="258.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">? Indet.</text></g><g><title>Mininet-GUI, Anthropic, Analítica R: Não, diverge do oficial</title><rect x="524" y="238" width="96" height="32" rx="5" class="d-bad"/><text x="572.0" y="258.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✗ Não</text></g><g><title>Mininet-GUI, Anthropic, Final F: Indet., diverge do oficial</title><rect x="644" y="238" width="96" height="32" rx="5" class="d-ind"/><text x="692.0" y="258.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">? Indet.</text></g><g><title>Mininet-GUI, Anthropic, Final R: Não, diverge do oficial</title><rect x="746" y="238" width="96" height="32" rx="5" class="d-bad"/><text x="794.0" y="258.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✗ Não</text></g><text x="112" y="299" font-size="13" text-anchor="start" font-weight="400" class="ink">Google</text><g><title>Mininet-GUI, Google, Oficial F: Atribuir</title><rect x="200" y="278" width="96" height="32" rx="5" class="d-ok"/><text x="248.0" y="298.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✓ Atribuir</text></g><g><title>Mininet-GUI, Google, Oficial R: Atribuir</title><rect x="302" y="278" width="96" height="32" rx="5" class="d-ok"/><text x="350.0" y="298.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✓ Atribuir</text></g><g><title>Mininet-GUI, Google, Analítica F: Atribuir, coincide com o oficial</title><rect x="422" y="278" width="96" height="32" rx="5" class="d-ok"/><text x="470.0" y="298.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✓ Atribuir</text></g><circle cx="510" cy="286" r="4" class="dot-match"/><g><title>Mininet-GUI, Google, Analítica R: Atribuir, coincide com o oficial</title><rect x="524" y="278" width="96" height="32" rx="5" class="d-ok"/><text x="572.0" y="298.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">✓ Atribuir</text></g><circle cx="612" cy="286" r="4" class="dot-match"/><g><title>Mininet-GUI, Google, Final F: Indet., diverge do oficial</title><rect x="644" y="278" width="96" height="32" rx="5" class="d-ind"/><text x="692.0" y="298.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">? Indet.</text></g><g><title>Mininet-GUI, Google, Final R: Indet., diverge do oficial</title><rect x="746" y="278" width="96" height="32" rx="5" class="d-ind"/><text x="794.0" y="298.5" font-size="13" text-anchor="middle" font-weight="500" class="ink">? Indet.</text></g><circle cx="206" cy="336" r="4" class="dot-match"/><text x="216" y="340" font-size="12" text-anchor="start" font-weight="400" class="muted">coincide com o selo oficial (2 na etapa analítica, 1 na final)</text></svg></div><figcaption><strong>Figura 2.</strong> Decisões por LLM, etapa e artefato. O oficial atribuiu F e R aos dois artefatos. Só três células coincidem com o oficial: duas na análise (Gemini, Mininet-GUI) e uma no final (OpenAI, Foremost-NG, F, a única com execução real).</figcaption></figure>
+
+<h3>5.1 Foremost-NG (SBSeg 2025; oficial: F e R atribuídos)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>LLM</th>
+<th>Analítica F/R</th>
+<th>Final F/R</th>
+<th>Coincide F</th>
+<th>Coincide R</th>
+<th>Condição real</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OpenAI</td>
+<td>Indet. / Não</td>
+<td>Atribuir / Não</td>
+<td>Sim</td>
+<td>Não</td>
+<td>Execução real (agente, Windows/MSYS2)</td>
+</tr>
+<tr>
+<td>Anthropic</td>
+<td>Indet. / Não</td>
+<td>Indet. / Não</td>
+<td>Não</td>
+<td>Não</td>
+<td>Simulação</td>
+</tr>
+<tr>
+<td>Google</td>
+<td>Não / Não</td>
+<td>Não / Não</td>
+<td>Não</td>
+<td>Não</td>
+<td>Simulação</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Selo F.</strong> O resultado da OpenAI é o mais sólido de todo o estudo: build e CLI com código de saída 0, MD5 do DFTT conferido, três JPEGs com hash correto, <code>audit.txt</code> gerado. Isso é prova de execução no sentido das instruções oficiais. Ressalvas: ambiente diferente do sugerido, teste escolhido pelo agente e sem comparação com o gabarito completo do DFTT. As decisões de Claude (Indeterminado) e Gemini (Não atribuir) não são comparáveis, pois nenhuma execução lhes foi apresentada. A negativa do Gemini já na etapa analítica ("não existe teste mínimo reproduzível nem imagem .dd de exemplo") é uma leitura estrita mas defensável dos requisitos do README; é a única divergência genuína de julgamento entre modelos nesse selo.</p>
+<p><strong>Selo R.</strong> Aqui há <strong>concordância unânime entre as três LLMs</strong> (Não atribuir), com a mesma justificativa: falta <code>evidence2.dd</code> e o protocolo da Figura 2. Isso é um resultado positivo sobre consistência entre modelos, que os slides tratam apenas como "divergência com o oficial". A pergunta relevante passa a ser: por que o comitê atribuiu R? Hipóteses não investigadas: (a) o material foi fornecido no rebuttal ou em canal privado; (b) o repositório mudou depois da avaliação; (c) o comitê adotou critério mais brando para R; (d) o comitê errou. Sem resolver isso, a "falha" das LLMs em R pode ser um acerto.</p>
+<p><strong>Inconsistências internas no relatório:</strong></p>
+<ul>
+<li>Ficha da LLM 3: "Confirma a análise" marcado como <strong>Não</strong> para F e R, mas a seção 11 marca <strong>Confirma</strong> para ambos. Como as decisões não mudaram (Não → Não), o correto é "Confirma".</li>
+<li>Ficha da LLM 2: o campo "Execução mínima" descreve passos (clonar, <code>make</code>, <code>sudo make install</code>) como se fossem registro, mas são o plano; não houve execução.</li>
+<li>Seção 7: registro da LLM 3 não conferido ("[ ]"), e o caminho do registro da LLM 1 (<code>outputs/llm1-openai-…md</code>) difere do citado na seção 8 (<code>runs/sbseg25--foremost-ng/chat-gpt/registro-prompts.md</code>). Rastreabilidade incompleta.</li>
+</ul>
+<h3>5.2 Mininet-GUI (SBRC 2025; oficial: F e R atribuídos)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>LLM</th>
+<th>Analítica F/R</th>
+<th>Final F/R</th>
+<th>Coincide F</th>
+<th>Coincide R</th>
+<th>Condição real</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OpenAI</td>
+<td>Indet. / Não</td>
+<td>Indet. / Não</td>
+<td>Não</td>
+<td>Não</td>
+<td>Validação parcial (npm ci, compileall) em Windows</td>
+</tr>
+<tr>
+<td>Anthropic</td>
+<td>Indet. / Não</td>
+<td>Indet. / Não</td>
+<td>Não</td>
+<td>Não</td>
+<td>Simulação</td>
+</tr>
+<tr>
+<td>Google</td>
+<td>Atribuir / Atribuir</td>
+<td>Indet. / Indet.</td>
+<td>Não</td>
+<td>Não</td>
+<td>Simulação</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Selo F.</strong> Nenhuma LLM pôde observar o artefato funcionando, porque nenhum ambiente adequado (VM dos autores, Linux com Mininet/OVS) foi usado. Esse resultado mede a falta de infraestrutura do experimento, não a capacidade de avaliação. O próprio README, segundo as três LLMs, tem rotas de instalação (VM, Docker, código-fonte) e um teste mínimo de nove passos: um revisor humano com a VM provavelmente conseguiria atribuir F. O experimento perdeu a oportunidade de verificar isso.</p>
+<p><strong>Selo R.</strong> A divergência OpenAI/Claude (Não) versus Gemini (Atribuir, na análise) é a única divergência substantiva de julgamento do estudo, e decorre da interpretação de "principais reivindicações" (ver 4.10). O comitê oficial ficou do lado do Gemini. Esse é um achado interessante: o modelo mais "permissivo" coincidiu com o oficial, e os mais "rigorosos" divergiram, o que sugere que comitês humanos aceitam que os autores escolham um subconjunto de reivindicações. O estudo, porém, apaga esse achado ao reportar só a decisão final, que foi forçada a "Indeterminado" pelo Prompt 3.</p>
+<p><strong>Observação sobre o artigo:</strong> como o Prompt 1 do Mininet-GUI não forneceu o artigo, a contagem de "seis contribuições" citada pelo Claude precisa ser verificada contra o texto publicado.</p>
+<h3>5.3 Resultados agregados (slides 05 e 07)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Medida</th>
+<th>Etapa analítica</th>
+<th>Etapa final</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Correspondência exata em F</td>
+<td>1/6 (Gemini, Mininet-GUI)</td>
+<td>1/6 (OpenAI, Foremost-NG)</td>
+</tr>
+<tr>
+<td>Correspondência exata em R</td>
+<td>1/6 (Gemini, Mininet-GUI)</td>
+<td>0/6</td>
+</tr>
+<tr>
+<td>Total</td>
+<td><strong>2/12</strong></td>
+<td><strong>1/12</strong></td>
+</tr>
+</tbody>
+</table></div>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 800 272" role="img" aria-label="Coincidências com o oficial comparadas a regras triviais" font-family="Inter, system-ui, sans-serif" style="min-width:640px"><line x1="250.0" x2="250.0" y1="30" y2="216" class="grid"/><text x="250.0" y="234" font-size="12" text-anchor="middle" font-weight="400" class="muted">0</text><line x1="380.0" x2="380.0" y1="30" y2="216" class="grid"/><text x="380.0" y="234" font-size="12" text-anchor="middle" font-weight="400" class="muted">3</text><line x1="510.0" x2="510.0" y1="30" y2="216" class="grid"/><text x="510.0" y="234" font-size="12" text-anchor="middle" font-weight="400" class="muted">6</text><line x1="640.0" x2="640.0" y1="30" y2="216" class="grid"/><text x="640.0" y="234" font-size="12" text-anchor="middle" font-weight="400" class="muted">9</text><line x1="770.0" x2="770.0" y1="30" y2="216" class="grid"/><text x="770.0" y="234" font-size="12" text-anchor="middle" font-weight="400" class="muted">12</text><line x1="250" x2="250" y1="30" y2="216" class="axis"/><defs><pattern id="hatchB" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" class="hatch-line"/></pattern></defs><text x="238" y="57.5" font-size="13" text-anchor="end" font-weight="500" class="ink">Etapa analítica</text><g><title>Etapa analítica: 2 de 12 (F: 1 · R: 1 (Gemini, Mininet-GUI))</title><path d="M250,40 h82.66666666666667 a4,4 0 0 1 4,4 v18 a4,4 0 0 1 -4,4 h-82.66666666666667 z" class="bar-s1"/><rect x="250" y="40" width="520" height="26" fill="transparent"/></g><text x="344.6666666666667" y="57.5" font-size="13" text-anchor="start" font-weight="700" class="ink">2/12</text><text x="384.6666666666667" y="57.5" font-size="12" text-anchor="start" font-weight="400" class="muted">F: 1 · R: 1 (Gemini, Mininet-GUI)</text><text x="238" y="105.5" font-size="13" text-anchor="end" font-weight="500" class="ink">Etapa final</text><g><title>Etapa final: 1 de 12 (F: 1 (OpenAI, Foremost-NG) · R: 0)</title><path d="M250,88 h39.333333333333336 a4,4 0 0 1 4,4 v18 a4,4 0 0 1 -4,4 h-39.333333333333336 z" class="bar-s1"/><rect x="250" y="88" width="520" height="26" fill="transparent"/></g><text x="301.3333333333333" y="105.5" font-size="13" text-anchor="start" font-weight="700" class="ink">1/12</text><text x="341.3333333333333" y="105.5" font-size="12" text-anchor="start" font-weight="400" class="muted">F: 1 (OpenAI, Foremost-NG) · R: 0</text><line x1="10" x2="770" y1="125.0" y2="125.0" class="rule"/><text x="238" y="153.5" font-size="13" text-anchor="end" font-weight="500" class="ink">Regra trivial: sempre Atribuir</text><g><title>Regra trivial: sempre Atribuir: 12 de 12 (acerta tudo sem ler o artefato)</title><path d="M250,136 h516.0 a4,4 0 0 1 4,4 v18 a4,4 0 0 1 -4,4 h-516.0 z" class="bar-ref" fill="url(#hatchB)"/><rect x="250" y="136" width="520" height="26" fill="transparent"/></g><text x="762.0" y="153.5" font-size="13" text-anchor="end" font-weight="700" class="ink">12/12</text><text x="238" y="201.5" font-size="13" text-anchor="end" font-weight="500" class="ink">Regra trivial: sempre Não atribuir</text><g><title>Regra trivial: sempre Não atribuir: 0 de 12 (erra tudo)</title><rect x="250" y="184" width="520" height="26" fill="transparent"/></g><text x="258.0" y="201.5" font-size="13" text-anchor="start" font-weight="700" class="ink">0/12</text><text x="298.0" y="201.5" font-size="12" text-anchor="start" font-weight="400" class="muted">erra tudo</text><text x="510.0" y="254" font-size="12" text-anchor="middle" font-weight="400" class="muted">decisões que coincidem com o selo oficial (de 12)</text></svg></div><figcaption><strong>Figura 3.</strong> Coincidências com o oficial nas duas etapas, ao lado de duas regras triviais. Como os dois artefatos têm todos os selos, a regra “sempre Atribuir” acerta 12 de 12 sem ler o artefato: a métrica de concordância, sozinha, não mede a qualidade do julgamento.</figcaption></figure>
+
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 780 396" role="img" aria-label="Transições das 12 decisões da etapa analítica para a final" font-family="Inter, system-ui, sans-serif" style="min-width:640px"><text x="125.0" y="26" font-size="13" text-anchor="middle" font-weight="700" class="ink">Etapa analítica</text><text x="645.0" y="26" font-size="13" text-anchor="middle" font-weight="700" class="ink">Etapa final</text><g><title>1: execução real (OpenAI, Foremost-NG, F)</title><path d="M210,216.0 C385.0,216.0 385.0,122.0 560,122.0" class="flow-exec" stroke-width="5.2" fill="none"/></g><line x1="195.0" x2="213.0" y1="50" y2="50" class="flow-exec" stroke-width="5"/><text x="219.0" y="54" font-size="12" text-anchor="start" font-weight="500" class="ink">1: execução real (OpenAI, Foremost-NG, F)</text><g><title>2: forçado pelo Prompt 3 (Gemini, Mininet-GUI, F e R)</title><path d="M210,122.0 C385.0,122.0 385.0,228.0 560,228.0" class="flow-p3" stroke-width="7.4" fill="none"/></g><line x1="195.0" x2="213.0" y1="72" y2="72" class="flow-p3" stroke-width="5"/><text x="219.0" y="76" font-size="12" text-anchor="start" font-weight="500" class="ink">2: forçado pelo Prompt 3 (Gemini, Mininet-GUI, F e R)</text><g><title>3: sem mudança</title><path d="M210,222.0 C385.0,222.0 385.0,222.0 560,222.0" class="flow-same" stroke-width="9.600000000000001" fill="none"/></g><text x="234" y="211.2" font-size="12" text-anchor="start" font-weight="500" class="ink">3: sem mudança</text><g><title>6: sem mudança</title><path d="M210,322.0 C385.0,322.0 385.0,322.0 560,322.0" class="flow-same" stroke-width="16.200000000000003" fill="none"/></g><text x="234" y="307.9" font-size="12" text-anchor="start" font-weight="500" class="ink">6: sem mudança</text><rect x="40" y="100" width="170" height="44" rx="6" class="d-ok"/><text x="125.0" y="127.0" font-size="14" text-anchor="middle" font-weight="600" class="ink">✓ Atribuir</text><rect x="560" y="100" width="170" height="44" rx="6" class="d-ok"/><text x="645.0" y="127.0" font-size="14" text-anchor="middle" font-weight="600" class="ink">✓ Atribuir</text><rect x="40" y="200" width="170" height="44" rx="6" class="d-ind"/><text x="125.0" y="227.0" font-size="14" text-anchor="middle" font-weight="600" class="ink">? Indeterminado</text><rect x="560" y="200" width="170" height="44" rx="6" class="d-ind"/><text x="645.0" y="227.0" font-size="14" text-anchor="middle" font-weight="600" class="ink">? Indeterminado</text><rect x="40" y="300" width="170" height="44" rx="6" class="d-bad"/><text x="125.0" y="327.0" font-size="14" text-anchor="middle" font-weight="600" class="ink">✗ Não atribuir</text><rect x="560" y="300" width="170" height="44" rx="6" class="d-bad"/><text x="645.0" y="327.0" font-size="14" text-anchor="middle" font-weight="600" class="ink">✗ Não atribuir</text><line x1="40" x2="68" y1="376" y2="376" class="flow-exec" stroke-width="6"/><text x="76" y="380" font-size="12" text-anchor="start" font-weight="400" class="muted">Mudança causada por execução real</text><line x1="300" x2="328" y1="376" y2="376" class="flow-p3" stroke-width="6"/><text x="336" y="380" font-size="12" text-anchor="start" font-weight="400" class="muted">Mudança causada pela instrução do Prompt 3</text><line x1="610" x2="638" y1="376" y2="376" class="flow-same" stroke-width="6"/><text x="646" y="380" font-size="12" text-anchor="start" font-weight="400" class="muted">Sem mudança</text></svg></div><figcaption><strong>Figura 4.</strong> Para onde foram as 12 decisões entre a etapa analítica e a final. Só uma mudança veio de evidência real; duas vieram da instrução do Prompt 3, que manda marcar Indeterminado quando a decisão depende de execução.</figcaption></figure>
+
+<p>Os slides reportam apenas a coluna final. Considerando as duas, a concordância <strong>caiu</strong> da análise para a etapa final. A frase "a execução aumentou o rigor, não a concordância" é compatível com isso, mas a queda foi produzida pelo Prompt 3 (Gemini, Mininet-GUI) e não por execução. O único caso de execução real (OpenAI, Foremost-NG, F) <strong>aumentou</strong> a concordância. Com n = 1, nenhuma das duas afirmações é generalizável.</p>
+<p>Outros pontos sobre os agregados:</p>
+<ul>
+<li>Nenhuma estatística inferencial é possível com 12 decisões dependentes e referência constante; os números devem ser apresentados como descritivos de um piloto.</li>
+<li>A conclusão "nenhuma LLM reproduziu R" omite que, no Foremost-NG, as três concordaram entre si e tinham justificativa verificável (arquivo ausente).</li>
+<li>O slide 01 diz "Execução: teste mínimo e experimento principal, quando viável"; o Apêndice A diz que o terceiro prompt é "avaliação pós-execução", mas o prompt real é "Simulação de execução". A nomenclatura dos slides esconde o desvio.</li>
+</ul>
+<hr />
+<h2 id="6-o-que-os-dados-permitem-e-não-permitem-concluir">6. O que os dados permitem e não permitem concluir</h2>
+<p><strong>Permitem concluir (com evidência razoável, como piloto):</strong></p>
+<ol>
+<li>As três LLMs identificam de forma consistente lacunas documentais objetivas (ausência de dataset, de protocolo experimental, de versões fixadas).</li>
+<li>Sem execução, as LLMs tendem a "Indeterminado" ou "Não atribuir" para F e R, o que é coerente com as instruções oficiais que exigem prova de execução.</li>
+<li>Um agente com capacidade de execução conseguiu produzir prova de funcionamento suficiente para F em um artefato de linha de comando simples.</li>
+<li>Artefatos que dependem de infraestrutura pesada (VM, emulação de rede) não podem ser avaliados em ambientes improvisados, seja por humanos ou por LLMs.</li>
+</ol>
+<p><strong>Não permitem concluir:</strong></p>
+<ol>
+<li>Que algum provedor seja melhor, mais rigoroso ou mais cauteloso que outro (tratamento confundido com provedor, n = 1 por célula, sem repetição).</li>
+<li>Que a execução aumente ou não a concordância com o oficial (uma única execução real).</li>
+<li>Que as LLMs "não reproduzem" a avaliação oficial em geral (dois artefatos, ambos com todos os selos, sem controles negativos, versões possivelmente diferentes, processo oficial com rebuttal).</li>
+<li>Que a divergência em R seja erro das LLMs (hipótese alternativa de material fornecido fora do repositório não investigada).</li>
+</ol>
+<hr />
+<h2 id="7-recomendações-prioritárias">7. Recomendações prioritárias</h2>
+<p>Em ordem de impacto (o novo protocolo em <a href="novo_protocolo.html"><code>novo_protocolo.md</code></a> detalha cada uma):</p>
+<ol>
+<li><strong>Cumprir o item 5 da tarefa:</strong> realizar a avaliação por execução com cada uma das três LLMs, em ambiente que atenda aos requisitos dos autores.</li>
+<li><strong>Desacoplar execução e julgamento:</strong> executar o artefato uma vez, por humano, no ambiente indicado pelos autores, seguindo um roteiro único consolidado, e entregar o <strong>mesmo</strong> registro de execução às três LLMs. Opcionalmente, acrescentar uma condição agêntica em que cada LLM executa em um sandbox idêntico.</li>
+<li><strong>Remover o Prompt 3 como substituto da execução</strong>; se mantido, que seja uma etapa auxiliar e nomeada como tal, sem instrução que force "Indeterminado".</li>
+<li><strong>Concentrar o esforço em um artefato executável de ponta a ponta</strong> (a tarefa exige um), escolhido por viabilidade de execução. Se o objetivo for generalizar além da tarefa, incluir artefatos com selos negados oficialmente (controles negativos).</li>
+<li><strong>Fixar a versão avaliada pelo comitê</strong> (commit, tag ou DOI do Zenodo da data da avaliação) e um pacote de entrada idêntico (artigo em PDF, repositório em ZIP, instruções).</li>
+<li><strong>Fixar a lista de reivindicações principais</strong> antes do experimento, por humanos, e fornecê-la a todas as LLMs.</li>
+<li><strong>Repetir cada etapa 3 vezes por LLM</strong> em conversas novas, com memória desativada, para medir estabilidade.</li>
+<li><strong>Usar métricas adequadas:</strong> decisão modal e estabilidade por LLM, cobertura (decisões não indeterminadas), concordância com o oficial e entre LLMs, taxa de evidências corretas.</li>
+<li><strong>Incluir uma linha de base humana:</strong> o aluno (ou cada membro da dupla) faz sua própria decisão F/R antes de ver as respostas das LLMs.</li>
+<li><strong>Corrigir as inconsistências de registro</strong> (seções 7, 11 e fichas) e padronizar caminhos dos registros.</li>
+</ol>
+</main>
+</div>
+<script>
+(function () {
+  var root = document.documentElement, btn = document.getElementById('theme');
+  function dark() { var t = root.getAttribute('data-theme'); return t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches; }
+  try { var s = localStorage.getItem('theme'); if (s) root.setAttribute('data-theme', s); } catch (e) {}
+  btn.addEventListener('click', function () {
+    var n = dark() ? 'light' : 'dark'; root.setAttribute('data-theme', n);
+    try { localStorage.setItem('theme', n); } catch (e) {}
+  });
+})();
+</script>
+</body>
+</html>
